@@ -2,13 +2,13 @@
 <html lang="en" class="h-full">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>Happy Birthday Janani! ✨</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   
-  <!-- Google Fonts: Plus Jakarta Sans, Outfit, Pacifico, Dancing Script, Caveat -->
+  <!-- Google Fonts: Plus Jakarta Sans, Outfit, Dancing Script, Caveat, Pacifico -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Dancing+Script:wght@700&family=Outfit:wght@400;600;700;800;900&family=Pacifico&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -19,9 +19,7 @@
   <!-- Lucide Icons CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <!-- YouTube IFrame Player API -->
-  <script src="https://www.youtube.com/iframe_api"></script>
-
+  <!-- Tailwind Configuration for Claymorphism Theme -->
   <script>
     tailwind.config = {
       theme: {
@@ -38,7 +36,7 @@
               bgLight: '#FDF0F5',
               panel: '#E5E4FF',
               panelDark: '#D4D3FF',
-              pink: '#FF85A2',
+              pink: '#FF8DA1',
               pinkDark: '#F43F5E',
               lavender: '#B8B5FF',
               lavenderDark: '#7C3AED',
@@ -56,6 +54,7 @@
             'spin-slow': 'spin 14s linear infinite',
             'squish-bounce': 'squishBounce 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) infinite',
             'flicker': 'flicker 1.5s ease-in-out infinite alternate',
+            'head-shake': 'headShake 0.5s ease-in-out',
           },
           keyframes: {
             clayFloat: {
@@ -69,6 +68,14 @@
             flicker: {
               '0%': { opacity: '0.85', transform: 'scale(0.96) rotate(-1deg)' },
               '100%': { opacity: '1', transform: 'scale(1.08) rotate(1deg)' },
+            },
+            headShake: {
+              '0%': { transform: 'translateX(0)' },
+              '20%': { transform: 'translateX(-8px) rotate(-3deg)' },
+              '40%': { transform: 'translateX(8px) rotate(3deg)' },
+              '60%': { transform: 'translateX(-5px) rotate(-1.5deg)' },
+              '80%': { transform: 'translateX(5px) rotate(1.5deg)' },
+              '100%': { transform: 'translateX(0)' },
             }
           }
         }
@@ -91,6 +98,13 @@
       overflow-x: hidden;
       font-family: 'Plus Jakarta Sans', sans-serif;
       perspective: 1200px;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
     }
 
     /* Floating Sprinkle Confetti Background Overlay */
@@ -107,11 +121,11 @@
       inset: 0;
       z-index: -1;
       pointer-events: none;
-      opacity: 0.08;
+      opacity: 0.07;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
     }
 
-    /* 3D CLAYMORPHISM PANEL & CARDS (MATCH REFERENCE) */
+    /* 3D CLAYMORPHISM PANEL & CARDS */
     .clay-panel {
       background: linear-gradient(145deg, #e8e7ff 0%, #dbdafe 100%);
       border-radius: 2.25rem;
@@ -119,10 +133,10 @@
       box-shadow: 
         0 25px 50px -12px rgba(138, 126, 189, 0.35),
         0 10px 20px -5px rgba(138, 126, 189, 0.2),
-        inset 0 3px 6px rgba(255, 255, 255, 0.9),
-        inset 0 -3px 6px rgba(150, 140, 200, 0.3);
+        inset 0 3px 6px rgba(255, 255, 255, 0.95),
+        inset 0 -4px 8px rgba(150, 140, 200, 0.3);
       transform-style: preserve-3d;
-      transition: transform 0.2s ease-out, box-shadow 0.3s ease;
+      transition: transform 0.25s ease-out, box-shadow 0.3s ease;
     }
 
     .clay-card {
@@ -150,25 +164,27 @@
       color: #ffffff;
       font-weight: 700;
       border-radius: 9999px;
-      border: 2px solid rgba(255, 255, 255, 0.7);
+      border: 2.5px solid rgba(255, 255, 255, 0.85);
       box-shadow: 
         0 10px 22px -4px rgba(244, 63, 94, 0.4),
         inset 0 3px 5px rgba(255, 255, 255, 0.6),
         inset 0 -3px 5px rgba(180, 20, 60, 0.3);
-      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, background 0.3s ease;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, background 0.3s ease;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      min-height: 44px;
+      touch-action: manipulation;
     }
     .clay-btn:hover {
-      transform: translateY(-3px) scale(1.05);
+      transform: translateY(-3px) scale(1.04);
       box-shadow: 
         0 14px 28px -4px rgba(244, 63, 94, 0.5),
         inset 0 3px 5px rgba(255, 255, 255, 0.85);
     }
     .clay-btn:active {
-      transform: translateY(2px) scale(0.95);
+      transform: translateY(2px) scale(0.94);
       box-shadow: 
         0 4px 10px -2px rgba(244, 63, 94, 0.4),
         inset 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -198,6 +214,9 @@
       border-radius: 9999px;
       color: #5b548a;
       font-weight: 700;
+      min-height: 36px;
+      display: inline-flex;
+      align-items: center;
     }
 
     /* 3D GLOWING PASTEL TEXT FOR FINAL PAGE */
@@ -210,17 +229,13 @@
         0 8px 15px rgba(244, 63, 94, 0.35);
     }
 
-    .text-[#FF5B85] {
-      color: #ff5b85;
-    }
-
-    /* Scene Transitions: Cloud-like float & fade */
+    /* Scene Transitions */
     .page-scene {
       display: none;
       opacity: 0;
       transform: translateY(20px) scale(0.96);
-      transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
-                  transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), 
+                  transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .page-scene.active {
       display: flex;
@@ -234,21 +249,27 @@
       inset: 0;
       z-index: 10;
       pointer-events: auto;
+      touch-action: manipulation;
     }
 
     /* 3D CLAY INITIAL LETTER "J" */
     .clay-letter-j {
-      position: relative;
+      position: absolute;
+      top: -15px;
+      right: 15px;
       font-family: 'Outfit', sans-serif;
       font-weight: 900;
-      font-size: 5rem;
+      font-size: 6.5rem;
       line-height: 1;
       background: linear-gradient(135deg, #ff8da1 0%, #f43f5e 50%, #be123c 100%);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      filter: drop-shadow(0 10px 15px rgba(244, 63, 94, 0.3));
+      filter: drop-shadow(0 12px 18px rgba(244, 63, 94, 0.35));
       animation: clayFloat 4s ease-in-out infinite;
+      pointer-events: none;
+      user-select: none;
+      opacity: 0.85;
     }
 
     /* 3D GIFT BOX STYLING */
@@ -259,6 +280,7 @@
       margin: 0 auto;
       cursor: pointer;
       position: relative;
+      touch-action: manipulation;
     }
     .gift-3d-cube {
       width: 100%;
@@ -281,7 +303,7 @@
       width: 170px;
       height: 170px;
       background: linear-gradient(135deg, #ff9ebb 0%, #f43f5e 100%);
-      border: 2px solid rgba(255, 255, 255, 0.6);
+      border: 2px solid rgba(255, 255, 255, 0.7);
       box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.1);
       transform-style: preserve-3d;
       transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.7s ease;
@@ -374,18 +396,18 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 1.5rem;
+      gap: 1.25rem;
       width: 100%;
       perspective: 1000px;
     }
     .polaroid-card-wrapper {
       perspective: 1000px;
-      width: 220px;
-      height: 275px;
+      width: 210px;
+      height: 265px;
       cursor: grab;
       transform-style: preserve-3d;
       transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      touch-action: none;
+      touch-action: manipulation;
     }
     .polaroid-card-wrapper:active {
       cursor: grabbing;
@@ -437,37 +459,7 @@
       z-index: 20;
     }
 
-    /* SILVER GLITTER SCRATCH CARDS (SCENE 6) */
-    .scratch-card-container {
-      position: relative;
-      width: 260px;
-      height: 150px;
-      border-radius: 1.25rem;
-      overflow: hidden;
-      box-shadow: 0 12px 24px -4px rgba(124, 58, 237, 0.25);
-      user-select: none;
-    }
-    .scratch-card-underlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, #fff0f5 0%, #e0e7ff 100%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-      text-align: center;
-    }
-    .scratch-card-canvas {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      cursor: pointer;
-      z-index: 10;
-    }
-
-    /* 3D CAKE & PEDESTAL (SCENE 7) */
+    /* 3D CAKE & PEDESTAL */
     .cake-3d-pedestal {
       position: relative;
       display: flex;
@@ -476,7 +468,7 @@
       perspective: 1000px;
     }
     .clay-pedestal-top {
-      width: 290px;
+      width: 280px;
       height: 18px;
       background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
       border-radius: 9999px;
@@ -484,7 +476,7 @@
       box-shadow: 0 8px 16px rgba(147, 137, 196, 0.25);
     }
     .clay-pedestal-base {
-      width: 140px;
+      width: 130px;
       height: 35px;
       background: linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 100%);
       border-radius: 0 0 24px 24px;
@@ -500,6 +492,7 @@
       animation: flicker 1.2s ease-in-out infinite alternate;
       transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
       cursor: pointer;
+      touch-action: manipulation;
     }
     .flame.extinguished {
       opacity: 0 !important;
@@ -549,9 +542,16 @@
       0% { transform: translate3d(0, 0, 0); }
       100% { transform: translate3d(-50%, 0, 0); }
     }
+
+    /* Reduced Motion Respect */
+    @media (prefers-reduced-motion: reduce) {
+      .animate-float, .animate-float-slow, .animate-squish-bounce, .ticker-move {
+        animation: none !important;
+      }
+    }
   </style>
 </head>
-<body class="h-full min-h-screen flex flex-col justify-between items-center relative select-none">
+<body class="h-full min-h-[100dvh] flex flex-col justify-between items-center relative select-none">
 
   <!-- Background Canvas for Floating Pastel Sprinkles -->
   <canvas id="sprinkleCanvas"></canvas>
@@ -561,15 +561,15 @@
   <canvas id="balloonCanvas"></canvas>
 
   <!-- TOP STEPPER & CONTROLS -->
-  <header class="w-full max-w-4xl px-6 pt-6 pb-2 z-20 flex justify-between items-center">
+  <header class="w-full max-w-4xl px-4 sm:px-6 pt-4 pb-2 z-20 flex justify-between items-center">
     <!-- Scene Badge Pill -->
-    <div class="clay-badge px-4 py-1.5 flex items-center space-x-2 text-xs font-bold uppercase tracking-wider">
+    <div class="clay-badge px-3.5 sm:px-4 py-1.5 flex items-center space-x-2 text-xs font-bold uppercase tracking-wider">
       <span class="w-2.5 h-2.5 rounded-full bg-pink-500 animate-ping"></span>
       <span id="stepperLabel">Scene 1 of 8</span>
     </div>
     
     <!-- Progress Dots -->
-    <div class="flex items-center space-x-2" id="stepperDots">
+    <div class="flex items-center space-x-1.5 sm:space-x-2" id="stepperDots">
       <!-- Generated in JS -->
     </div>
 
@@ -580,19 +580,17 @@
   </header>
 
   <!-- MAIN SCENES CONTAINER -->
-  <main class="w-full max-w-4xl flex-1 flex flex-col justify-center items-center px-4 py-6 z-10">
+  <main class="w-full max-w-4xl flex-1 flex flex-col justify-center items-center px-3 sm:px-6 py-4 sm:py-6 z-10">
 
     <!-- ================= SCENE 1: LANDING (MATCH REFERENCE IMAGE) ================= -->
     <section id="page1" class="page-scene active w-full">
-      <div class="clay-panel w-full p-6 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden">
+      <div class="clay-panel w-full p-6 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-6 sm:gap-8 relative overflow-hidden">
         
-        <!-- Floating 3D Clay Letter "J" Background Accent -->
-        <div class="absolute -bottom-6 -right-4 opacity-20 pointer-events-none text-9xl font-black text-pink-400 select-none">
-          J
-        </div>
+        <!-- Floating 3D Clay Letter "J" -->
+        <div class="clay-letter-j" id="floatingLetterJ">J</div>
 
         <!-- Left Column: Headline, Script Name, Start Button -->
-        <div class="flex-1 space-y-6 text-center md:text-left z-10">
+        <div class="flex-1 space-y-4 sm:space-y-6 text-center md:text-left z-10">
           
           <div class="inline-flex items-center space-x-2 clay-badge px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-pink-600">
             <i data-lucide="sparkles" class="w-3.5 h-3.5 text-pink-500 animate-spin"></i>
@@ -600,15 +598,15 @@
           </div>
 
           <div class="space-y-1">
-            <h2 class="text-xs font-black tracking-[0.25em] text-purple-700 uppercase">
+            <h2 class="text-xs sm:text-sm font-black tracking-[0.25em] text-purple-700 uppercase">
               HAPPY BIRTHDAY TO YOU
             </h2>
-            <h1 class="font-script text-6xl sm:text-7xl md:text-8xl text-[#FF5B85] drop-shadow-sm font-bold leading-tight transform -rotate-2">
+            <h1 class="font-script text-6xl sm:text-7xl md:text-8xl text-[#FF5B85] drop-shadow-sm font-bold leading-none transform -rotate-2 py-1">
               Janani
             </h1>
           </div>
 
-          <p class="text-sm sm:text-base text-pastel-textMuted max-w-md font-medium leading-relaxed">
+          <p class="text-xs sm:text-base text-pastel-textMuted max-w-md font-medium leading-relaxed">
             A sweet pastel world created with love for an extraordinary person. Tap start to unlock your surprise! ✨
           </p>
 
@@ -624,9 +622,9 @@
         <div class="flex flex-col items-center justify-center space-y-4 z-10 shrink-0">
           
           <!-- 3D Date Card Block -->
-          <div class="clay-card p-6 sm:p-8 flex flex-col items-center justify-center space-y-3 min-w-[220px] text-center border-2 border-white">
-            <span class="text-xs font-bold tracking-widest text-purple-500 uppercase">BIRTHDAY DATE</span>
-            <div class="text-3xl sm:text-4xl font-black tracking-widest text-purple-900 font-heading" id="dobDisplay">
+          <div class="clay-card p-5 sm:p-8 flex flex-col items-center justify-center space-y-3 min-w-[210px] text-center border-2 border-white">
+            <span class="text-[11px] font-bold tracking-widest text-purple-500 uppercase">BIRTHDAY DATE</span>
+            <div class="text-2xl sm:text-4xl font-black tracking-widest text-purple-900 font-heading" id="dobDisplay">
               25 • 08 • 2007
             </div>
             <div class="clay-badge px-4 py-1 text-xs font-extrabold tracking-widest uppercase text-pink-600 bg-pink-50">
@@ -635,7 +633,7 @@
           </div>
 
           <!-- Secret Lock Card (Easter Egg: Tap 5x) -->
-          <div id="easterEggLockCard" onclick="handleEasterEggClick()" class="clay-card p-3 px-5 flex items-center space-x-3 cursor-pointer hover:scale-105 transition-transform text-left max-w-xs">
+          <div id="easterEggLockCard" onclick="handleEasterEggClick()" class="clay-card p-3 px-4 flex items-center space-x-3 cursor-pointer hover:scale-105 active:scale-95 transition-transform text-left max-w-xs">
             <div class="w-9 h-9 rounded-full bg-pink-100 flex items-center justify-center text-pink-600 shrink-0 shadow-inner">
               <i data-lucide="lock" id="easterEggIcon" class="w-4 h-4"></i>
             </div>
@@ -652,16 +650,16 @@
 
     <!-- ================= SCENE 2: 3D GIFT BOX ================= -->
     <section id="page2" class="page-scene w-full">
-      <div class="clay-panel w-full p-8 text-center space-y-6">
+      <div class="clay-panel w-full p-6 sm:p-8 text-center space-y-5">
         
         <div class="space-y-1">
           <span class="clay-badge px-3 py-1 text-xs font-bold uppercase tracking-wider text-pink-600">Stage 2</span>
-          <h2 class="text-3xl sm:text-4xl font-black text-purple-900 font-heading">Press & Hold the Gift 🎁</h2>
-          <p class="text-sm text-pastel-textMuted font-medium">Charge it up until it bursts open with magic balloons!</p>
+          <h2 class="text-2xl sm:text-4xl font-black text-purple-900 font-heading">Press & Hold the Gift 🎁</h2>
+          <p class="text-xs sm:text-sm text-pastel-textMuted font-medium">Charge it up until it bursts open with magic balloons!</p>
         </div>
 
         <!-- 3D Gift Box Interactive Area -->
-        <div class="py-6">
+        <div class="py-4 sm:py-6">
           <div class="gift-3d-scene" id="giftScene">
             <!-- SVG Charge Meter Ring -->
             <svg class="charge-ring-svg" viewBox="0 0 220 220">
@@ -721,22 +719,22 @@
 
     <!-- ================= SCENE 3: TYPING MESSAGE ================= -->
     <section id="page3" class="page-scene w-full">
-      <div class="clay-panel w-full p-8 text-center space-y-6">
+      <div class="clay-panel w-full p-6 sm:p-8 text-center space-y-5">
         
         <div class="space-y-1">
           <span class="clay-badge px-3 py-1 text-xs font-bold uppercase tracking-wider text-purple-600">A Note For You</span>
-          <h2 class="text-3xl sm:text-4xl font-black text-purple-900 font-heading">Read carefully... 📜</h2>
+          <h2 class="text-2xl sm:text-4xl font-black text-purple-900 font-heading">Read carefully... 📜</h2>
         </div>
 
-        <!-- Glass Clay Message Card -->
-        <div class="clay-card p-6 sm:p-8 text-left relative overflow-hidden min-h-[220px] flex flex-col justify-between">
+        <!-- Clay Message Card -->
+        <div class="clay-card p-5 sm:p-8 text-left relative overflow-hidden min-h-[200px] flex flex-col justify-between">
           <div class="space-y-4 relative z-10">
             <div class="flex items-center space-x-2 text-pink-500">
               <i data-lucide="heart" class="w-5 h-5 fill-current animate-pulse"></i>
               <span class="text-xs font-extrabold uppercase tracking-wider">Special Message</span>
             </div>
 
-            <p id="typedMessageText" class="text-base sm:text-lg text-purple-950 leading-relaxed font-medium typing-cursor whitespace-pre-line"></p>
+            <p id="typedMessageText" class="text-sm sm:text-lg text-purple-950 leading-relaxed font-medium typing-cursor whitespace-pre-line"></p>
           </div>
 
           <div class="mt-6 pt-4 border-t border-purple-100 flex justify-between items-center text-xs text-purple-400 font-bold tracking-wider">
@@ -755,18 +753,18 @@
 
     <!-- ================= SCENE 4: APPRECIATION CARDS ================= -->
     <section id="page4" class="page-scene w-full">
-      <div class="clay-panel w-full p-8 text-center space-y-6">
+      <div class="clay-panel w-full p-6 sm:p-8 text-center space-y-5">
         
         <div class="space-y-1">
           <span class="clay-badge px-3 py-1 text-xs font-bold uppercase tracking-wider text-pink-600">Why You Are Amazing</span>
-          <h2 class="text-3xl sm:text-4xl font-black text-purple-900 font-heading">Three Simple Truths 🌟</h2>
+          <h2 class="text-2xl sm:text-4xl font-black text-purple-900 font-heading">Three Simple Truths 🌟</h2>
         </div>
 
-        <div class="w-full space-y-4" id="cardsContainer">
+        <div class="w-full space-y-3 sm:space-y-4" id="cardsContainer">
           <!-- Rendered from CONFIG -->
         </div>
 
-        <button onclick="goToPage(5)" class="clay-btn px-8 py-4 text-base flex items-center space-x-2 mx-auto mt-4">
+        <button onclick="goToPage(5)" class="clay-btn px-8 py-3.5 text-base flex items-center space-x-2 mx-auto mt-3">
           <span>View Photo Memories 📸</span>
           <i data-lucide="arrow-right" class="w-4 h-4"></i>
         </button>
@@ -776,61 +774,91 @@
 
     <!-- ================= SCENE 5: POLAROID PHOTO MEMORIES ================= -->
     <section id="page5" class="page-scene w-full">
-      <div class="clay-panel w-full p-8 text-center space-y-6">
+      <div class="clay-panel w-full p-6 sm:p-8 text-center space-y-5">
         
         <div class="space-y-1">
           <span class="clay-badge px-3 py-1 text-xs font-bold uppercase tracking-wider text-purple-600">Memories Board</span>
-          <h2 class="text-3xl sm:text-4xl font-black text-purple-900 font-heading">Precious Moments 📸</h2>
+          <h2 class="text-2xl sm:text-4xl font-black text-purple-900 font-heading">Precious Moments 📸</h2>
           <p class="text-xs text-pastel-textMuted font-medium">Click any photo to flip & read note • Drag slightly to move</p>
         </div>
 
-        <div class="polaroid-board py-4" id="polaroidBoard">
+        <div class="polaroid-board py-2" id="polaroidBoard">
           <!-- Rendered from CONFIG -->
         </div>
 
-        <button onclick="goToPage(6)" class="clay-btn px-8 py-4 text-base flex items-center space-x-2 mx-auto mt-4">
-          <span>Scratch & Win 🪙</span>
-          <i data-lucide="sparkles" class="w-4 h-4"></i>
+        <button onclick="goToPage(6)" class="clay-btn px-8 py-3.5 text-base flex items-center space-x-2 mx-auto mt-2">
+          <span>Take the Fun Quiz 🌸</span>
+          <i data-lucide="help-circle" class="w-4 h-4"></i>
         </button>
 
       </div>
     </section>
 
-    <!-- ================= SCENE 6: SILVER GLITTER SCRATCH & WIN ================= -->
+    <!-- ================= SCENE 6: FUN QUIZ (REPLACES SCRATCH & WIN) ================= -->
     <section id="page6" class="page-scene w-full">
-      <div class="clay-panel w-full p-8 text-center space-y-6">
+      <div class="clay-panel w-full p-6 sm:p-8 text-center space-y-5 relative overflow-hidden">
         
-        <div class="space-y-1">
-          <span class="clay-badge px-3 py-1 text-xs font-bold uppercase tracking-wider text-pink-600">Interactive Fun</span>
-          <h2 class="text-3xl sm:text-4xl font-black text-purple-900 font-heading">Scratch & Win Surprises! 🪙</h2>
-          <p class="text-xs text-pastel-textMuted font-medium">Rub over the silver glitter foil to reveal your birthday tickets!</p>
+        <div class="space-y-1 z-10 relative">
+          <div class="inline-flex items-center space-x-2 clay-badge px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-pink-600">
+            <i data-lucide="help-circle" class="w-3.5 h-3.5 text-pink-500"></i>
+            <span id="quizProgressBadge">Question 1 of 4</span>
+          </div>
+          <h2 class="text-2xl sm:text-4xl font-black text-purple-900 font-heading leading-tight pt-1">
+            How well does the universe know Janani? 🌸
+          </h2>
+          <p class="text-xs sm:text-sm text-pastel-textMuted font-medium max-w-md mx-auto">
+            Answer the questions to unlock the birthday cake!
+          </p>
         </div>
 
-        <!-- Scratch Cards Grid -->
-        <div class="flex flex-wrap justify-center gap-6 py-4" id="scratchCardsContainer">
-          <!-- Rendered dynamically in JS -->
+        <!-- Quiz Question & Answers Container -->
+        <div id="quizQuestionCard" class="clay-card p-5 sm:p-8 max-w-lg mx-auto space-y-5 text-left relative z-10 transition-all duration-300">
+          <h3 id="quizQuestionText" class="text-base sm:text-xl font-extrabold text-purple-950 font-heading leading-snug">
+            Loading Question...
+          </h3>
+
+          <div id="quizOptionsContainer" class="space-y-2.5">
+            <!-- Rendered dynamically -->
+          </div>
+
+          <div id="quizFeedbackMessage" class="text-center font-bold text-xs sm:text-sm min-h-[20px] transition-all"></div>
         </div>
 
-        <button onclick="goToPage(7)" class="clay-btn px-8 py-4 text-base flex items-center space-x-2 mx-auto mt-4">
-          <span>Time for the Cake 🎂</span>
-          <i data-lucide="arrow-right" class="w-4 h-4"></i>
-        </button>
+        <!-- 3D Reward Chest Modal (Unlocked after last question) -->
+        <div id="quizRewardChest" class="hidden flex-col items-center justify-center space-y-4 p-6 sm:p-8 clay-card max-w-lg mx-auto text-center animate-squish-bounce z-10 relative">
+          <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-gradient-to-br from-yellow-300 via-pink-400 to-purple-500 p-1 flex items-center justify-center shadow-xl border-4 border-white animate-float">
+            <div class="w-full h-full bg-white/90 rounded-2xl flex items-center justify-center text-4xl sm:text-5xl drop-shadow">
+              🎂
+            </div>
+          </div>
+
+          <div class="space-y-1.5">
+            <span class="clay-badge px-4 py-1 text-xs font-black uppercase tracking-widest text-pink-600">QUIZ COMPLETED!</span>
+            <h3 class="text-2xl sm:text-3xl font-black text-purple-950 font-heading">You Unlocked the Cake! 🎂</h3>
+            <p class="text-xs sm:text-sm text-purple-800 font-medium">You know Janani so well! Now it's time to make a birthday wish.</p>
+          </div>
+
+          <button onclick="goToPage(7)" class="clay-btn px-8 py-3.5 text-base sm:text-lg flex items-center space-x-3 mx-auto">
+            <span>Continue to Cake 🎂</span>
+            <i data-lucide="arrow-right" class="w-5 h-5"></i>
+          </button>
+        </div>
 
       </div>
     </section>
 
     <!-- ================= SCENE 7: 3D CAKE & CANDLES ================= -->
     <section id="page7" class="page-scene w-full">
-      <div class="clay-panel w-full p-8 text-center space-y-6">
+      <div class="clay-panel w-full p-6 sm:p-8 text-center space-y-5">
         
         <div class="space-y-1">
           <span class="clay-badge px-3 py-1 text-xs font-bold uppercase tracking-wider text-purple-600">Time for a Wish</span>
-          <h2 class="text-3xl sm:text-4xl font-black text-purple-900 font-heading">Make a Wish... 🎂</h2>
+          <h2 class="text-2xl sm:text-4xl font-black text-purple-900 font-heading">Make a Wish... 🎂</h2>
           <p class="text-xs text-pastel-textMuted font-medium">Click the candles to blow them out or use your mic!</p>
         </div>
 
         <!-- 3D Cake & Pedestal -->
-        <div class="cake-3d-pedestal py-4 my-2">
+        <div class="cake-3d-pedestal py-2 my-2">
           
           <!-- Candle Flames & "18" Candle Stick Topper -->
           <div class="flex justify-center space-x-6 mb-1 relative z-20">
@@ -845,30 +873,30 @@
           </div>
 
           <!-- Candle Topper "18" Badge -->
-          <div class="clay-badge px-3 py-0.5 text-sm font-black text-pink-600 bg-white shadow-md mb-1 z-10 border border-pink-200">
+          <div class="clay-badge px-3 py-0.5 text-xs font-black text-pink-600 bg-white shadow-md mb-1 z-10 border border-pink-200">
             18 🕯️
           </div>
 
           <!-- Cake Top Tier -->
-          <div class="w-48 sm:w-56 h-14 bg-gradient-to-b from-pink-300 to-pink-500 rounded-t-2xl shadow-lg relative overflow-hidden border-t-2 border-x-2 border-white flex flex-col justify-between p-2">
+          <div class="w-44 sm:w-56 h-12 sm:h-14 bg-gradient-to-b from-pink-300 to-pink-500 rounded-t-2xl shadow-lg relative overflow-hidden border-t-2 border-x-2 border-white flex flex-col justify-between p-2">
             <div class="w-full flex justify-between space-x-1 -mt-2">
-              <div class="w-6 h-5 bg-white rounded-b-full shadow"></div>
-              <div class="w-8 h-6 bg-white rounded-b-full shadow"></div>
-              <div class="w-6 h-4 bg-white rounded-b-full shadow"></div>
-              <div class="w-7 h-5 bg-white rounded-b-full shadow"></div>
-              <div class="w-6 h-5 bg-white rounded-b-full shadow"></div>
+              <div class="w-5 sm:w-6 h-4 sm:h-5 bg-white rounded-b-full shadow"></div>
+              <div class="w-7 sm:w-8 h-5 sm:h-6 bg-white rounded-b-full shadow"></div>
+              <div class="w-5 sm:w-6 h-3 sm:h-4 bg-white rounded-b-full shadow"></div>
+              <div class="w-6 sm:w-7 h-4 sm:h-5 bg-white rounded-b-full shadow"></div>
+              <div class="w-5 sm:w-6 h-4 sm:h-5 bg-white rounded-b-full shadow"></div>
             </div>
           </div>
 
           <!-- Cake Base Tier -->
-          <div class="w-60 sm:w-72 h-20 bg-gradient-to-b from-purple-400 via-pink-400 to-purple-600 rounded-b-2xl shadow-xl relative overflow-hidden border-2 border-white flex flex-col justify-between p-3">
+          <div class="w-56 sm:w-72 h-16 sm:h-20 bg-gradient-to-b from-purple-400 via-pink-400 to-purple-600 rounded-b-2xl shadow-xl relative overflow-hidden border-2 border-white flex flex-col justify-between p-2 sm:p-3">
             <div class="flex justify-around items-center opacity-90 py-1">
               <span class="w-2 h-2 rounded-full bg-yellow-300 animate-ping"></span>
               <span class="w-2.5 h-3.5 rounded-full bg-cyan-300 transform rotate-45"></span>
               <span class="w-3 h-2 rounded-full bg-white transform -rotate-12"></span>
               <span class="w-2 h-2 rounded-full bg-pink-300"></span>
             </div>
-            <div class="w-full h-2.5 bg-white/30 rounded-full"></div>
+            <div class="w-full h-2 bg-white/30 rounded-full"></div>
           </div>
 
           <!-- 3D Clay Stand Pedestal Base -->
@@ -877,13 +905,13 @@
         </div>
 
         <!-- Wish Revealed Card -->
-        <div id="wishMessageCard" class="hidden clay-card p-4 max-w-sm mx-auto text-pink-600 font-script italic text-center text-lg animate-float">
+        <div id="wishMessageCard" class="hidden clay-card p-4 max-w-sm mx-auto text-pink-600 font-script italic text-center text-base sm:text-lg animate-float">
           <p id="wishMessageContent">"✨ May all your biggest dreams and quietest wishes come true this year! ✨"</p>
         </div>
 
         <!-- Blow Buttons -->
-        <div class="flex flex-wrap justify-center gap-3">
-          <button id="blowCandlesBtn" onclick="blowOutCandles()" class="clay-btn px-6 py-3 text-sm flex items-center space-x-2">
+        <div class="flex flex-wrap justify-center gap-2.5">
+          <button id="blowCandlesBtn" onclick="blowOutCandles()" class="clay-btn px-6 py-3 text-xs sm:text-sm flex items-center space-x-2">
             <i data-lucide="wind" class="w-4 h-4"></i>
             <span>Blow candles 💨</span>
           </button>
@@ -904,7 +932,7 @@
 
     <!-- ================= SCENE 8: FINAL BIRTHDAY WISH ================= -->
     <section id="page8" class="page-scene w-full">
-      <div class="clay-panel w-full p-8 text-center space-y-6">
+      <div class="clay-panel w-full p-6 sm:p-8 text-center space-y-5">
         
         <div class="clay-badge px-4 py-1.5 inline-flex items-center space-x-2 text-xs font-black uppercase tracking-widest text-pink-600 mx-auto">
           <i data-lucide="party-popper" class="w-4 h-4 animate-bounce"></i>
@@ -912,22 +940,22 @@
         </div>
 
         <!-- Main Extruded Glowing Pastel Title -->
-        <div class="space-y-2">
-          <h1 class="text-4xl sm:text-6xl font-black tracking-tight text-purple-950 font-heading">
+        <div class="space-y-1 sm:space-y-2">
+          <h1 class="text-3xl sm:text-6xl font-black tracking-tight text-purple-950 font-heading">
             Happy Birthday, <br/>
-            <span id="finalPersonName" class="font-script text-6xl sm:text-7xl text-clay-3d inline-block transform -rotate-2">Janani</span>! 🎉
+            <span id="finalPersonName" class="font-script text-5xl sm:text-7xl text-clay-3d inline-block transform -rotate-2">Janani</span>! 🎉
           </h1>
           <div class="clay-badge px-4 py-1 text-xs font-bold text-purple-600 inline-block">
             25 • 08 • 2007
           </div>
         </div>
 
-        <div class="clay-card p-6 sm:p-8 max-w-xl mx-auto space-y-4 text-center">
-          <p id="finalMessageContent" class="text-base sm:text-lg text-purple-900 leading-relaxed font-medium">
+        <div class="clay-card p-5 sm:p-8 max-w-xl mx-auto space-y-3 text-center">
+          <p id="finalMessageContent" class="text-sm sm:text-lg text-purple-900 leading-relaxed font-medium">
             Wishing you a year filled with endless adventures, unforgettable memories, pure happiness, and all the love in the universe. Keep shining bright!
           </p>
 
-          <div class="pt-4 border-t border-purple-100 flex justify-center items-center">
+          <div class="pt-3 border-t border-purple-100 flex justify-center items-center">
             <div class="clay-badge px-4 py-1.5 flex items-center space-x-2 text-xs font-bold">
               <span class="text-purple-400">From:</span>
               <span id="finalSenderName" class="text-pink-600 font-extrabold">Dhanush</span>
@@ -936,7 +964,7 @@
           </div>
         </div>
 
-        <div class="flex flex-wrap justify-center gap-4 pt-2">
+        <div class="flex flex-wrap justify-center gap-3 pt-1">
           <button onclick="triggerConfetti()" class="clay-btn clay-btn-secondary px-6 py-3 text-xs flex items-center space-x-2">
             <i data-lucide="sparkles" class="w-4 h-4 text-pink-500"></i>
             <span>More Confetti 🎉</span>
@@ -954,16 +982,16 @@
   </main>
 
   <!-- ================= PASTEL MUSIC CONTROL PILL ================= -->
-  <div id="musicPlayerPill" class="fixed bottom-4 right-4 z-40 clay-panel !rounded-full px-4 py-2 flex items-center space-x-3 shadow-2xl max-w-[320px] sm:max-w-xs border-2 border-white">
-    <button onclick="prevTrack()" class="text-purple-600 hover:text-pink-600 transition-colors" title="Previous Song">
+  <div id="musicPlayerPill" class="fixed bottom-4 right-4 z-40 clay-panel !rounded-full px-4 py-2 flex items-center space-x-3 shadow-2xl max-w-[310px] sm:max-w-xs border-2 border-white">
+    <button onclick="prevTrack()" class="text-purple-600 hover:text-pink-600 transition-colors p-1" title="Previous Song">
       <i data-lucide="skip-back" class="w-4 h-4"></i>
     </button>
 
-    <button id="pillPlayBtn" onclick="togglePlayPause()" class="w-8 h-8 rounded-full bg-pink-500 text-white flex items-center justify-center shadow-md hover:scale-105 transition-transform" title="Play / Pause">
+    <button id="pillPlayBtn" onclick="togglePlayPause()" class="w-8 h-8 rounded-full bg-pink-500 text-white flex items-center justify-center shadow-md hover:scale-105 transition-transform shrink-0" title="Play / Pause">
       <i data-lucide="play" id="pillPlayIcon" class="w-4 h-4 fill-current ml-0.5"></i>
     </button>
 
-    <button onclick="nextTrack()" class="text-purple-600 hover:text-pink-600 transition-colors" title="Next Song">
+    <button onclick="nextTrack()" class="text-purple-600 hover:text-pink-600 transition-colors p-1" title="Next Song">
       <i data-lucide="skip-forward" class="w-4 h-4"></i>
     </button>
 
@@ -975,7 +1003,7 @@
       </div>
     </div>
 
-    <!-- Volume -->
+    <!-- Volume Slider (Desktop) -->
     <div class="hidden sm:flex items-center space-x-1">
       <i data-lucide="volume-1" class="w-3.5 h-3.5 text-purple-400"></i>
       <input type="range" id="volumeSlider" min="0" max="100" value="80" oninput="changeVolume(this.value)" class="w-12 h-1 bg-purple-200 rounded-lg appearance-none cursor-pointer accent-pink-500">
@@ -1011,7 +1039,7 @@
   </div>
 
   <!-- Footer -->
-  <footer class="w-full max-w-4xl px-6 py-4 z-20 text-center text-xs text-purple-400 font-medium">
+  <footer class="w-full max-w-4xl px-4 py-3 z-20 text-center text-xs text-purple-400 font-medium">
     Made with ❤️ for someone special • <button onclick="openPersonalizeModal()" class="underline hover:text-purple-700 transition-colors">Edit Personalization</button>
   </footer>
 
@@ -1062,7 +1090,7 @@
       dob: "25.08.2007",
       birthdayPersonName: "Janani",
       yourName: "Dhanush",
-      customMessage: "Today is not just another day...\nIt is the day someone truly extraordinary was born.\nAnd this little website was made just for you. 💖",
+      typingMessage: "Today is not just another day...\nIt is the day someone truly extraordinary was born.\nAnd this little website was made just for you. 💖",
       cards: [
         {
           emoji: "✨",
@@ -1094,11 +1122,29 @@
           note: "May your day be filled with endless smiles and happiness like this!"
         }
       ],
-      scratchCards: [
-        { title: "Ticket #1", reward: "Unlimited Hugs & Happiness 💖" },
-        { title: "Ticket #2", reward: "A Special Birthday Treat 🍦" },
-        { title: "Ticket #3", reward: "100 Magic Birthday Wishes ✨" }
+      quizQuestions: [
+        { 
+          q: "What's Janani's favorite way to relax?", 
+          options: ["Listening to music 🎵", "Binging shows 📺", "Sleeping 😴"], 
+          answer: 0 
+        },
+        { 
+          q: "Janani's superpower would be?", 
+          options: ["Spreading instant happiness ✨", "Reading minds 🧠", "Time travel ⏳"], 
+          answer: 0 
+        },
+        { 
+          q: "What makes Janani laugh the hardest?", 
+          options: ["Silly memes 😂", "Inside jokes 🤫", "Funny pets 🐱"], 
+          answer: 1 
+        },
+        { 
+          q: "Which word best describes Janani?", 
+          options: ["Pure Sunshine ☀️", "Kind Heart 💖", "All of the above! 🌟"], 
+          answer: 2 
+        }
       ],
+      secretMessage: "💖 Secret Unlocked: You are loved more than 3000! Thank you for being so wonderful! ✨",
       wishMessage: "✨ May all your biggest dreams and quietest wishes come true this year! ✨",
       finalWishMessage: "Wishing you a year filled with endless adventures, unforgettable memories, pure happiness, and all the love in the universe. Keep shining bright! 🚀✨",
       easterEggMessage: "💖 Secret Unlocked: You are loved more than 3000! Thank you for being so wonderful! ✨",
@@ -1122,6 +1168,12 @@
     let isMuted = false;
     let typingTimer = null;
     let typingFinished = false;
+
+    // Quiz State
+    let currentQuizIndex = 0;
+
+    // Mobile / Device Detection for Performance Throttling
+    const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 640;
 
     // Music State
     let currentSongIndex = 0;
@@ -1166,7 +1218,7 @@
       applyConfigToDOM();
       renderAppreciationCards();
       renderPolaroidBoard();
-      renderScratchCards();
+      renderFunQuiz();
       setupStepperDots();
       setupSprinkleCanvas();
       setupBalloonCanvas();
@@ -1190,23 +1242,24 @@
       document.getElementById("inputPersonName").value = CONFIG.birthdayPersonName || CONFIG.name;
       document.getElementById("inputDOB").value = CONFIG.dob;
       document.getElementById("inputYourName").value = CONFIG.yourName;
-      document.getElementById("inputCustomMessage").value = CONFIG.customMessage;
+      document.getElementById("inputCustomMessage").value = CONFIG.typingMessage || CONFIG.customMessage;
     }
 
     function renderAppreciationCards() {
       const container = document.getElementById("cardsContainer");
       container.innerHTML = "";
 
-      CONFIG.cards.forEach((card, index) => {
+      const cardsData = CONFIG.cards || CONFIG.appreciationTexts || [];
+      cardsData.forEach((card) => {
         const cardEl = document.createElement("div");
-        cardEl.className = "clay-card p-5 text-left flex items-start space-x-4 tilt-card-3d";
+        cardEl.className = "clay-card p-4 sm:p-5 text-left flex items-start space-x-3.5 sm:space-x-4 tilt-card-3d";
         cardEl.innerHTML = `
-          <div class="w-12 h-12 rounded-2xl bg-pink-100 border border-pink-200 flex items-center justify-center text-2xl shrink-0 shadow-inner">
-            ${card.emoji}
+          <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-pink-100 border border-pink-200 flex items-center justify-center text-xl sm:text-2xl shrink-0 shadow-inner">
+            ${card.emoji || '✨'}
           </div>
-          <div class="space-y-1">
-            <h3 class="text-base font-bold text-purple-900">${card.title}</h3>
-            <p class="text-xs sm:text-sm text-purple-800 leading-relaxed">${card.text}</p>
+          <div class="space-y-0.5 sm:space-y-1">
+            <h3 class="text-sm sm:text-base font-bold text-purple-900">${card.title}</h3>
+            <p class="text-xs sm:text-sm text-purple-800 leading-relaxed font-medium">${card.text}</p>
           </div>
         `;
         container.appendChild(cardEl);
@@ -1217,8 +1270,9 @@
       const board = document.getElementById("polaroidBoard");
       board.innerHTML = "";
       const rotations = [-3, 2, -2, 4];
+      const photosData = CONFIG.photos || CONFIG.photoCaptions || [];
 
-      CONFIG.photos.forEach((photo, idx) => {
+      photosData.forEach((photo, idx) => {
         const wrapper = document.createElement("div");
         wrapper.className = "polaroid-card-wrapper tilt-card-3d";
         const rot = rotations[idx % rotations.length];
@@ -1229,11 +1283,11 @@
           <div class="polaroid-card-inner" onclick="flipPolaroidCard(this)">
             <!-- Front -->
             <div class="polaroid-front flex flex-col justify-between">
-              <div class="w-full h-44 bg-gray-100 rounded-lg overflow-hidden relative shadow-inner">
-                <img src="${photo.url}" alt="${photo.caption}" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1513151233558-d860c5398176?q=80&w=400&auto=format&fit=crop';">
+              <div class="w-full h-40 sm:h-44 bg-gray-100 rounded-lg overflow-hidden relative shadow-inner">
+                <img src="${photo.url}" alt="${photo.caption}" loading="lazy" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1513151233558-d860c5398176?q=80&w=400&auto=format&fit=crop';">
               </div>
-              <div class="pt-2 text-center">
-                <p class="font-polaroid text-lg font-bold text-purple-950 leading-tight">${photo.caption}</p>
+              <div class="pt-1.5 text-center">
+                <p class="font-polaroid text-base sm:text-lg font-bold text-purple-950 leading-tight">${photo.caption}</p>
                 <p class="text-[10px] text-purple-400 font-bold uppercase tracking-wider mt-0.5">${photo.date || 'Memory'}</p>
               </div>
             </div>
@@ -1258,86 +1312,84 @@
       wrapper.classList.toggle('flipped');
     }
 
-    /* RENDER SILVER GLITTER SCRATCH CARDS (SCENE 6) */
-    function renderScratchCards() {
-      const container = document.getElementById("scratchCardsContainer");
-      container.innerHTML = "";
+    /* RENDER NEW FUN QUIZ SCENE (SCENE 6) */
+    function renderFunQuiz() {
+      currentQuizIndex = 0;
+      showQuizQuestion();
+    }
 
-      CONFIG.scratchCards.forEach((sc, idx) => {
-        const cardWrapper = document.createElement("div");
-        cardWrapper.className = "scratch-card-container clay-card";
+    function showQuizQuestion() {
+      const quizCard = document.getElementById("quizQuestionCard");
+      const rewardChest = document.getElementById("quizRewardChest");
+      const progressBadge = document.getElementById("quizProgressBadge");
+      const feedbackMsg = document.getElementById("quizFeedbackMessage");
 
-        cardWrapper.innerHTML = `
-          <div class="scratch-card-underlay">
-            <span class="clay-badge px-2.5 py-0.5 text-[10px] font-extrabold text-pink-600 mb-1">${sc.title}</span>
-            <p class="text-sm font-bold text-purple-900 font-heading">${sc.reward}</p>
-            <span class="text-[10px] text-purple-400 mt-1">✨ UNLOCKED! ✨</span>
+      if (!CONFIG.quizQuestions || CONFIG.quizQuestions.length === 0) return;
+
+      if (currentQuizIndex >= CONFIG.quizQuestions.length) {
+        quizCard.classList.add("hidden");
+        rewardChest.classList.remove("hidden");
+        rewardChest.classList.add("flex");
+        triggerConfetti();
+        playChimeSound();
+        return;
+      }
+
+      quizCard.classList.remove("hidden");
+      rewardChest.classList.add("hidden");
+      rewardChest.classList.remove("flex");
+      feedbackMsg.innerText = "";
+      feedbackMsg.className = "text-center font-bold text-xs sm:text-sm min-h-[20px] transition-all";
+
+      const qData = CONFIG.quizQuestions[currentQuizIndex];
+      progressBadge.innerText = `Question ${currentQuizIndex + 1} of ${CONFIG.quizQuestions.length}`;
+      document.getElementById("quizQuestionText").innerText = qData.q;
+
+      const optionsContainer = document.getElementById("quizOptionsContainer");
+      optionsContainer.innerHTML = "";
+
+      qData.options.forEach((optText, optIdx) => {
+        const btn = document.createElement("button");
+        btn.className = "w-full clay-btn clay-btn-secondary p-3.5 sm:p-4 text-left font-bold text-xs sm:text-sm text-purple-900 rounded-2xl flex items-center justify-between hover:scale-[1.02] active:scale-[0.98] transition-transform shadow-md border-2 border-white/80 touch-manipulation";
+        btn.innerHTML = `
+          <span>${optText}</span>
+          <div class="w-6 h-6 rounded-full border-2 border-purple-300 flex items-center justify-center text-xs font-black text-purple-500 shrink-0 ml-2">
+            ${String.fromCharCode(65 + optIdx)}
           </div>
-          <canvas class="scratch-card-canvas" id="scratchCanvas${idx}"></canvas>
         `;
-        container.appendChild(cardWrapper);
-
-        // Init Silver Glitter Canvas Overlay
-        setTimeout(() => initSilverGlitterCanvas(`scratchCanvas${idx}`), 50);
+        btn.onclick = () => handleQuizAnswer(optIdx, qData.answer, btn);
+        optionsContainer.appendChild(btn);
       });
     }
 
-    function initSilverGlitterCanvas(canvasId) {
-      const canvas = document.getElementById(canvasId);
-      if (!canvas) return;
-      const ctx = canvas.getContext("2d");
-      const width = canvas.offsetWidth || 260;
-      const height = canvas.offsetHeight || 150;
-      canvas.width = width;
-      canvas.height = height;
+    function handleQuizAnswer(selectedIdx, correctIdx, btnEl) {
+      const feedbackMsg = document.getElementById("quizFeedbackMessage");
 
-      // Draw Silver Glitter Metallic Surface
-      const grad = ctx.createLinearGradient(0, 0, width, height);
-      grad.addColorStop(0, '#E2E8F0');
-      grad.addColorStop(0.3, '#F8FAFC');
-      grad.addColorStop(0.5, '#CBD5E1');
-      grad.addColorStop(0.7, '#FFFFFF');
-      grad.addColorStop(1, '#94A3B8');
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, width, height);
+      if (selectedIdx === correctIdx) {
+        playPopSound();
+        triggerMiniConfetti();
+        btnEl.classList.remove("clay-btn-secondary");
+        btnEl.classList.add("bg-gradient-to-r", "from-emerald-400", "to-teal-500", "text-white", "border-emerald-200");
+        feedbackMsg.innerText = "Nailed it! 🎉";
+        feedbackMsg.className = "text-center font-bold text-xs sm:text-sm text-emerald-600 min-h-[20px] animate-bounce";
 
-      // Add Glitter Noise Particles
-      for (let i = 0; i < 400; i++) {
-        ctx.fillStyle = Math.random() > 0.5 ? 'rgba(255,255,255,0.9)' : 'rgba(148,163,184,0.6)';
-        ctx.beginPath();
-        ctx.arc(Math.random() * width, Math.random() * height, Math.random() * 2, 0, Math.PI * 2);
-        ctx.fill();
-      }
+        const btns = document.querySelectorAll("#quizOptionsContainer button");
+        btns.forEach(b => b.disabled = true);
 
-      // Scratch instructions text
-      ctx.font = 'bold 12px Plus Jakarta Sans';
-      ctx.fillStyle = '#475569';
-      ctx.textAlign = 'center';
-      ctx.fillText('✨ RUB TO SCRATCH ✨', width / 2, height / 2 + 4);
-
-      // Scratch off mechanism
-      let isScratching = false;
-
-      function scratch(e) {
-        if (!isScratching) return;
-        const rect = canvas.getBoundingClientRect();
-        const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
-        const y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
-
-        ctx.globalCompositeOperation = 'destination-out';
-        ctx.beginPath();
-        ctx.arc(x, y, 18, 0, Math.PI * 2);
-        ctx.fill();
+        setTimeout(() => {
+          currentQuizIndex++;
+          showQuizQuestion();
+        }, 1100);
+      } else {
         playClickSound();
+        btnEl.classList.add("animate-head-shake", "border-pink-400");
+        feedbackMsg.innerText = "Try again 💗";
+        feedbackMsg.className = "text-center font-bold text-xs sm:text-sm text-pink-600 min-h-[20px]";
+
+        setTimeout(() => {
+          btnEl.classList.remove("animate-head-shake", "border-pink-400");
+        }, 600);
       }
-
-      canvas.addEventListener('mousedown', (e) => { isScratching = true; scratch(e); });
-      canvas.addEventListener('mousemove', scratch);
-      window.addEventListener('mouseup', () => { isScratching = false; });
-
-      canvas.addEventListener('touchstart', (e) => { isScratching = true; scratch(e); }, { passive: true });
-      canvas.addEventListener('touchmove', scratch, { passive: true });
-      window.addEventListener('touchend', () => { isScratching = false; });
     }
 
     /* STEPPER DOTS */
@@ -1347,7 +1399,7 @@
       for (let i = 1; i <= TOTAL_SCENES; i++) {
         const dot = document.createElement("button");
         dot.className = i === 1 
-          ? "w-6 h-2.5 rounded-full bg-pink-500 transition-all duration-300 shadow-sm cursor-pointer"
+          ? "w-5 sm:w-6 h-2.5 rounded-full bg-pink-500 transition-all duration-300 shadow-sm cursor-pointer"
           : "w-2.5 h-2.5 rounded-full bg-purple-200 transition-all duration-300 cursor-pointer hover:bg-purple-300";
         dot.title = `Go to Scene ${i}`;
         dot.onclick = () => jumpToPage(i);
@@ -1360,7 +1412,7 @@
       const dots = document.getElementById("stepperDots").children;
       for (let i = 0; i < dots.length; i++) {
         if (i === step - 1) {
-          dots[i].className = "w-6 h-2.5 rounded-full bg-pink-500 transition-all duration-300 shadow-sm cursor-pointer";
+          dots[i].className = "w-5 sm:w-6 h-2.5 rounded-full bg-pink-500 transition-all duration-300 shadow-sm cursor-pointer";
         } else if (i < maxUnlockedPage) {
           dots[i].className = "w-2.5 h-2.5 rounded-full bg-pink-300 transition-all duration-300 cursor-pointer hover:bg-pink-400";
         } else {
@@ -1390,11 +1442,13 @@
 
         if (currentPage === 3) {
           startTypingMessage();
+        } else if (currentPage === 6) {
+          renderFunQuiz();
         } else if (currentPage === 8) {
           triggerConfetti();
           startBalloonsAnimation();
         }
-      }, 300);
+      }, 250);
     }
 
     function jumpToPage(pageNumber) {
@@ -1404,6 +1458,7 @@
     }
 
     function startSurpriseAndGoToPage(targetPage) {
+      lazyLoadYouTubeAPI();
       startAudioPlayback();
       goToPage(targetPage);
     }
@@ -1496,7 +1551,7 @@
       continueBtn.style.opacity = "0";
       continueBtn.style.pointerEvents = "none";
       
-      const fullText = CONFIG.customMessage;
+      const fullText = CONFIG.typingMessage || CONFIG.customMessage;
       let charIndex = 0;
       typingFinished = false;
 
@@ -1515,7 +1570,7 @@
           continueBtn.style.opacity = "1";
           continueBtn.style.pointerEvents = "auto";
         }
-      }, 45);
+      }, 40);
     }
 
     /* CAKE & CANDLE BLOW (SCENE 7) */
@@ -1616,7 +1671,7 @@
     function showEasterEggModal() {
       playChimeSound();
       triggerConfetti();
-      document.getElementById("easterEggText").innerText = CONFIG.easterEggMessage;
+      document.getElementById("easterEggText").innerText = CONFIG.easterEggMessage || CONFIG.secretMessage;
       const modal = document.getElementById("easterEggModal");
       modal.classList.remove("hidden");
       modal.classList.add("flex");
@@ -1628,7 +1683,17 @@
       modal.classList.remove("flex");
     }
 
-    /* MUSIC STREAMING ENGINE (YOUTUBE & SPOTIFY) */
+    /* MUSIC STREAMING ENGINE (LAZY LOADED YOUTUBE & SPOTIFY) */
+    let ytScriptLoaded = false;
+    function lazyLoadYouTubeAPI() {
+      if (ytScriptLoaded) return;
+      ytScriptLoaded = true;
+      const tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      const firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    }
+
     function extractYouTubeId(url) {
       if (!url) return null;
       const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
@@ -1744,6 +1809,7 @@
       }
 
       if (!isYTReady || !ytPlayer) {
+        lazyLoadYouTubeAPI();
         startAudioPlayback();
         return;
       }
@@ -1858,8 +1924,9 @@
       resizeSprinkleCanvas();
       window.addEventListener("resize", resizeSprinkleCanvas);
 
+      const count = isMobileDevice ? 22 : 45;
       const colors = ['#FF8DA1', '#B8B5FF', '#FDE047', '#A5F3FC', '#A7F3D0', '#F43F5E'];
-      for (let i = 0; i < 45; i++) {
+      for (let i = 0; i < count; i++) {
         sprinkles.push({
           x: Math.random() * sprinkleCanvas.width,
           y: Math.random() * sprinkleCanvas.height,
@@ -1920,11 +1987,11 @@
         for (let i = balloons.length - 1; i >= 0; i--) {
           const b = balloons[i];
           const dist = Math.hypot(mouseX - b.x, mouseY - b.y);
-          if (dist <= b.radius * 1.2) {
+          if (dist <= b.radius * 1.25) {
             playPopSound();
             if (typeof confetti === 'function') {
               confetti({
-                particleCount: 25,
+                particleCount: isMobileDevice ? 15 : 25,
                 spread: 45,
                 origin: { x: b.x / window.innerWidth, y: b.y / window.innerHeight },
                 colors: [b.color, '#ffffff', '#fde047']
@@ -1945,14 +2012,15 @@
 
     function startBalloonsAnimation() {
       balloons = [];
+      const count = isMobileDevice ? 7 : 16;
       const colors = ['#FF8DA1', '#B8B5FF', '#FDE047', '#A5F3FC', '#F43F5E', '#C4B5FD'];
-      for (let i = 0; i < 16; i++) {
+      for (let i = 0; i < count; i++) {
         balloons.push({
           x: Math.random() * balloonCanvas.width,
           y: balloonCanvas.height + Math.random() * 200,
-          radius: 22 + Math.random() * 16,
+          radius: 20 + Math.random() * 16,
           color: colors[Math.floor(Math.random() * colors.length)],
-          speed: 0.8 + Math.random() * 1.5,
+          speed: 0.8 + Math.random() * 1.4,
           swing: Math.random() * 0.04,
           swingAngle: Math.random() * Math.PI * 2
         });
@@ -2008,6 +2076,8 @@
 
     /* 3D TILT & PARALLAX */
     function init3DTilt() {
+      if (isMobileDevice) return; // Touch devices use CSS hover/active micro-animations
+
       document.addEventListener("mousemove", (e) => {
         const cards = document.querySelectorAll(".tilt-card-3d");
         cards.forEach(card => {
@@ -2036,6 +2106,8 @@
 
     /* MAGNETIC BUTTONS */
     function initMagneticButtons() {
+      if (isMobileDevice) return;
+
       const magneticBtns = document.querySelectorAll(".magnetic-btn");
       magneticBtns.forEach(btn => {
         btn.addEventListener("mousemove", (e) => {
@@ -2056,7 +2128,7 @@
         if (e.target && e.target.id === 'balloonCanvas') return;
         if (typeof confetti === 'function') {
           confetti({
-            particleCount: 12,
+            particleCount: isMobileDevice ? 8 : 14,
             spread: 40,
             origin: { x: e.clientX / window.innerWidth, y: e.clientY / window.innerHeight },
             colors: ['#FF8DA1', '#B8B5FF', '#FDE047', '#A5F3FC']
@@ -2069,7 +2141,7 @@
     function triggerConfetti() {
       if (typeof confetti === 'function') {
         confetti({
-          particleCount: 90,
+          particleCount: isMobileDevice ? 45 : 90,
           spread: 80,
           origin: { y: 0.6 },
           colors: ['#FF8DA1', '#B8B5FF', '#FDE047', '#A5F3FC', '#F43F5E']
@@ -2080,7 +2152,7 @@
     function triggerMiniConfetti() {
       if (typeof confetti === 'function') {
         confetti({
-          particleCount: 35,
+          particleCount: isMobileDevice ? 20 : 35,
           spread: 55,
           origin: { y: 0.7 },
           colors: ['#FF8DA1', '#B8B5FF', '#FDE047']
@@ -2195,7 +2267,7 @@
       CONFIG.birthdayPersonName = document.getElementById("inputPersonName").value || "Janani";
       CONFIG.dob = document.getElementById("inputDOB").value || "25.08.2007";
       CONFIG.yourName = document.getElementById("inputYourName").value || "Dhanush";
-      CONFIG.customMessage = document.getElementById("inputCustomMessage").value || CONFIG.customMessage;
+      CONFIG.typingMessage = document.getElementById("inputCustomMessage").value || CONFIG.typingMessage;
 
       applyConfigToDOM();
       closePersonalizeModal();
