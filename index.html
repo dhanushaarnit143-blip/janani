@@ -8,16 +8,19 @@
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   
-  <!-- Google Fonts: Plus Jakarta Sans & Playfair Display & Pacifico -->
+  <!-- Google Fonts: Plus Jakarta Sans, Playfair Display, Pacifico, Caveat -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:ital,wght@0,600;0,800;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Pacifico&family=Playfair+Display:ital,wght@0,600;0,800;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
   <!-- Canvas Confetti CDN -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   
   <!-- Lucide Icons CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- YouTube IFrame Player API -->
+  <script src="https://www.youtube.com/iframe_api"></script>
 
   <script>
     tailwind.config = {
@@ -27,6 +30,7 @@
             sans: ['"Plus Jakarta Sans"', 'sans-serif'],
             serif: ['"Playfair Display"', 'serif'],
             handwriting: ['"Pacifico"', 'cursive'],
+            polaroid: ['"Caveat"', 'cursive'],
           },
           colors: {
             birthday: {
@@ -43,6 +47,7 @@
             'shimmer': 'shimmer 2.5s linear infinite',
             'wiggle': 'wiggle 0.5s ease-in-out infinite',
             'flicker': 'flicker 1.5s ease-in-out infinite alternate',
+            'spin-slow': 'spin 12s linear infinite',
           },
           keyframes: {
             float: {
@@ -62,8 +67,8 @@
               '50%': { transform: 'rotate(3deg)' },
             },
             flicker: {
-              '0%': { opacity: '0.8', transform: 'scale(0.98) skewX(-1deg)' },
-              '100%': { opacity: '1', transform: 'scale(1.05) skewX(1deg)' },
+              '0%': { opacity: '0.85', transform: 'scale(0.96) rotate(-1deg)' },
+              '100%': { opacity: '1', transform: 'scale(1.08) rotate(1deg)' },
             }
           }
         }
@@ -72,7 +77,6 @@
   </script>
 
   <style>
-    /* Custom Scrollbar & Root Variables */
     :root {
       color-scheme: dark;
     }
@@ -82,19 +86,22 @@
       color: #f3f4f6;
       overflow-x: hidden;
       font-family: 'Plus Jakarta Sans', sans-serif;
+      perspective: 1200px;
     }
 
-    /* Ambient Animated Mesh Gradient */
+    /* Ambient Animated Mesh Gradient & Parallax Container */
     .mesh-gradient-bg {
       position: fixed;
-      inset: 0;
-      z-index: -2;
-      background: radial-gradient(circle at 20% 20%, rgba(255, 77, 141, 0.25), transparent 45%),
-                  radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.25), transparent 45%),
-                  radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.15), transparent 50%),
-                  radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.2), transparent 40%);
-      filter: blur(40px);
+      inset: -50px;
+      z-index: -3;
+      background: radial-gradient(circle at 20% 20%, rgba(255, 77, 141, 0.28), transparent 45%),
+                  radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.28), transparent 45%),
+                  radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.18), transparent 50%),
+                  radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.22), transparent 40%);
+      filter: blur(45px);
       animation: meshShift 20s ease-in-out infinite alternate;
+      will-change: transform;
+      transition: transform 0.1s ease-out;
     }
 
     @keyframes meshShift {
@@ -103,40 +110,89 @@
       100% { transform: scale(1.05) rotate(-3deg); }
     }
 
-    /* Dither / Film Grain Noise Overlay (Dither Effect Requirement) */
+    /* Starfield Parallax Layer */
+    .stars-layer {
+      position: fixed;
+      inset: -100px;
+      z-index: -2;
+      pointer-events: none;
+      background-image: 
+        radial-gradient(2px 2px at 20px 30px, #ffffff, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 40px 70px, rgba(255, 255, 255, 0.8), rgba(0,0,0,0)),
+        radial-gradient(1px 1px at 90px 40px, #ffffff, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 160px 120px, rgba(245, 158, 11, 0.9), rgba(0,0,0,0)),
+        radial-gradient(1.5px 1.5px at 230px 190px, rgba(255, 77, 141, 0.9), rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 300px 80px, #ffffff, rgba(0,0,0,0)),
+        radial-gradient(1px 1px at 370px 220px, rgba(139, 92, 246, 0.9), rgba(0,0,0,0));
+      background-repeat: repeat;
+      background-size: 400px 300px;
+      opacity: 0.6;
+      transition: transform 0.15s ease-out;
+    }
+
+    /* Dither / Film Grain Noise Overlay */
     .dither-overlay {
       position: fixed;
       inset: 0;
       z-index: -1;
       pointer-events: none;
-      opacity: 0.15;
+      opacity: 0.14;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
     }
 
-    /* Glassmorphism Styles */
-    .glass-card {
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    /* Cursor Spotlight Glow */
+    #cursorSpotlight {
+      position: fixed;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 77, 141, 0.15) 0%, rgba(139, 92, 246, 0.08) 45%, transparent 70%);
+      pointer-events: none;
+      z-index: 1;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s, height 0.3s, opacity 0.3s;
+      mix-blend-mode: screen;
     }
 
-    .glass-card-hover {
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* Click Sparkle Animation */
+    .click-sparkle {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fff, #ff4d8d);
+      box-shadow: 0 0 12px #ff4d8d, 0 0 20px #fbbf24;
+      animation: sparkleFade 0.6s ease-out forwards;
+    }
+    @keyframes sparkleFade {
+      0% { transform: scale(1) translateY(0); opacity: 1; }
+      100% { transform: scale(0) translateY(-25px) rotate(45deg); opacity: 0; }
+    }
+
+    /* Glassmorphism & 3D Tilt Hover */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      transform-style: preserve-3d;
+      transition: transform 0.15s ease-out, background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
     }
     .glass-card-hover:hover {
-      transform: translateY(-8px) scale(1.02);
-      background: rgba(255, 255, 255, 0.08);
-      border-color: rgba(255, 255, 255, 0.25);
-      box-shadow: 0 30px 60px rgba(255, 77, 141, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.09);
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 30px 60px rgba(255, 77, 141, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.35);
     }
 
     /* Origin UI Spotlight Button */
     .spotlight-btn {
       position: relative;
       overflow: hidden;
-      transition: all 0.3s ease;
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+      transform-style: preserve-3d;
     }
     .spotlight-btn::before {
       content: '';
@@ -145,7 +201,7 @@
       left: -50%;
       width: 200%;
       height: 200%;
-      background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 60%);
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.35) 0%, transparent 60%);
       transform: scale(0);
       transition: transform 0.5s ease;
       pointer-events: none;
@@ -164,130 +220,294 @@
       animation: shimmer 4s linear infinite;
     }
 
-    /* Page Scene Transition Styles */
+    /* 3D Extruded Glowing Text for Final Page */
+    .text-3d-glow {
+      text-shadow: 
+        0 1px 0 #ff4d8d,
+        0 2px 0 #e11d48,
+        0 3px 0 #be123c,
+        0 4px 0 #9333ea,
+        0 5px 0 #7e22ce,
+        0 6px 15px rgba(0, 0, 0, 0.7),
+        0 0 25px rgba(255, 77, 141, 0.8),
+        0 0 50px rgba(139, 92, 246, 0.6);
+    }
+
+    /* Page Scene Transition Styles (Fade + Scale + Blur) */
     .page-scene {
       display: none;
       opacity: 0;
-      transform: translateY(20px) scale(0.98);
-      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      filter: blur(10px);
+      transform: translateY(24px) scale(0.95);
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
+                  transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                  filter 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .page-scene.active {
       display: flex;
       opacity: 1;
+      filter: blur(0px);
       transform: translateY(0) scale(1);
     }
 
-    /* 3D Gift Box Styling (CodeOpen pattern) */
-    .gift-container {
+    /* ================= TASK 1: 3D GIFT CUBE STYLING ================= */
+    .gift-3d-scene {
       perspective: 1000px;
+      width: 170px;
+      height: 170px;
+      margin: 0 auto;
       cursor: pointer;
-    }
-    .gift-box {
       position: relative;
-      width: 160px;
-      height: 160px;
+    }
+    .gift-3d-cube {
+      width: 100%;
+      height: 100%;
+      position: relative;
       transform-style: preserve-3d;
-      transition: transform 0.3s ease;
+      transform: rotateX(-22deg) rotateY(32deg);
+      transition: transform 0.3s ease-out;
     }
-    .gift-lid {
-      position: absolute;
-      top: -24px;
-      left: -10px;
-      width: 180px;
-      height: 40px;
-      background: linear-gradient(135deg, #ff4d8d, #e11d48);
-      border-radius: 8px;
-      box-shadow: 0 8px 20px rgba(225, 29, 72, 0.4);
-      z-index: 10;
-      transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    .gift-3d-cube.charging {
+      animation: giftShake 0.12s ease-in-out infinite alternate;
     }
-    .gift-lid-ribbon {
-      position: absolute;
-      left: 50%;
-      top: 0;
-      transform: translateX(-50%);
-      width: 32px;
-      height: 100%;
-      background: #fbbf24;
+    @keyframes giftShake {
+      0% { transform: rotateX(-22deg) rotateY(32deg) translate3d(-3px, -2px, 0); }
+      100% { transform: rotateX(-22deg) rotateY(32deg) translate3d(3px, 2px, 0); }
     }
-    .gift-bow {
+
+    .cube-face {
       position: absolute;
-      top: -24px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 50px;
-      height: 30px;
-    }
-    .gift-body {
-      position: absolute;
-      top: 10px;
-      left: 0;
-      width: 160px;
-      height: 140px;
+      width: 170px;
+      height: 170px;
       background: linear-gradient(135deg, #f43f5e, #be123c);
-      border-radius: 0 0 12px 12px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
+      transform-style: preserve-3d;
+      transition: transform 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.8s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .gift-body-ribbon {
+    .cube-face-front  { transform: translateZ(85px); }
+    .cube-face-back   { transform: rotateY(180deg) translateZ(85px); }
+    .cube-face-left   { transform: rotateY(-90deg) translateZ(85px); }
+    .cube-face-right  { transform: rotateY(90deg) translateZ(85px); }
+    .cube-face-top    { 
+      transform: rotateX(90deg) translateZ(85px); 
+      background: linear-gradient(135deg, #ff4d8d, #e11d48);
+    }
+    .cube-face-bottom { 
+      transform: rotateX(-90deg) translateZ(85px); 
+      background: #881337; 
+      box-shadow: 0 30px 40px rgba(0,0,0,0.7);
+    }
+
+    /* Ribbon strips on cube faces */
+    .cube-ribbon-v {
       position: absolute;
       left: 50%;
       top: 0;
       transform: translateX(-50%);
-      width: 32px;
+      width: 30px;
       height: 100%;
-      background: #fbbf24;
+      background: linear-gradient(to right, #f59e0b, #fbbf24, #f59e0b);
+      box-shadow: 0 0 8px rgba(251, 191, 36, 0.4);
+    }
+    .cube-ribbon-h {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      width: 100%;
+      height: 30px;
+      background: linear-gradient(to bottom, #f59e0b, #fbbf24, #f59e0b);
+      box-shadow: 0 0 8px rgba(251, 191, 36, 0.4);
     }
 
-    .gift-box.opened .gift-lid {
-      transform: translateY(-140px) rotate(-25deg) scale(0.9);
+    /* 3D Ribbon Bow on Top Face */
+    .cube-bow {
+      position: absolute;
+      top: -24px;
+      left: 50%;
+      transform: translateX(-50%) translateZ(10px);
+      width: 60px;
+      height: 35px;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* Internal 3D Glow Core */
+    .cube-inner-glow {
+      position: absolute;
+      inset: 20px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fbbf24, #ff4d8d, transparent);
       opacity: 0;
-    }
-    .gift-box.opened {
-      animation: giftPulse 1s ease forwards;
-    }
-    @keyframes giftPulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.15) rotate(5deg); }
-      100% { transform: scale(0.95); opacity: 0.8; }
+      transform: scale(0.2);
+      transition: all 0.8s ease-out;
+      filter: blur(10px);
     }
 
-    /* Candle Flame Animation */
+    /* 3D Burst Opened Animation */
+    .gift-3d-cube.opened .cube-face-top {
+      transform: rotateX(160deg) translateZ(140px) translateY(-60px);
+      opacity: 0.15;
+    }
+    .gift-3d-cube.opened .cube-face-front {
+      transform: rotateX(-100deg) translateZ(110px);
+      opacity: 0.4;
+    }
+    .gift-3d-cube.opened .cube-face-left {
+      transform: rotateY(-100deg) translateZ(110px);
+      opacity: 0.4;
+    }
+    .gift-3d-cube.opened .cube-face-right {
+      transform: rotateY(100deg) translateZ(110px);
+      opacity: 0.4;
+    }
+    .gift-3d-cube.opened .cube-face-back {
+      transform: rotateY(180deg) rotateX(-100deg) translateZ(110px);
+      opacity: 0.4;
+    }
+    .gift-3d-cube.opened .cube-inner-glow {
+      opacity: 1;
+      transform: scale(2.2);
+    }
+
+    /* Charge Meter Ring Around Gift */
+    .charge-ring-svg {
+      position: absolute;
+      top: -25px;
+      left: -25px;
+      width: 220px;
+      height: 220px;
+      pointer-events: none;
+      transform: rotate(-90deg);
+    }
+    .charge-ring-bg {
+      stroke: rgba(255, 255, 255, 0.1);
+      stroke-width: 6;
+      fill: none;
+    }
+    .charge-ring-fill {
+      stroke: url(#chargeGradient);
+      stroke-width: 6;
+      fill: none;
+      stroke-dasharray: 628;
+      stroke-dashoffset: 628;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.05s linear;
+    }
+
+    /* ================= TASK 3: 3D POLAROID CARDS ================= */
+    .polaroid-board {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      width: 100%;
+      perspective: 1000px;
+    }
+    .polaroid-card-wrapper {
+      perspective: 1000px;
+      width: 220px;
+      height: 270px;
+      cursor: pointer;
+      transform-style: preserve-3d;
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .polaroid-card-wrapper:hover {
+      z-index: 30 !important;
+    }
+    .polaroid-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .polaroid-card-wrapper.flipped .polaroid-card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .polaroid-front, .polaroid-back {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 12px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 5px 15px rgba(0, 0, 0, 0.3);
+      padding: 12px;
+      background: #fcfbf9;
+      color: #1f2937;
+      display: flex;
+      flex-col;
+      justify-content: space-between;
+    }
+    .polaroid-back {
+      transform: rotateY(180deg);
+      background: linear-gradient(135deg, #1e1b4b, #312e81);
+      color: #f3f4f6;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* Sticky Tape Effect on Polaroid */
+    .polaroid-tape {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-2deg);
+      width: 70px;
+      height: 24px;
+      background: rgba(254, 243, 199, 0.65);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      backdrop-filter: blur(4px);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      z-index: 20;
+    }
+
+    /* ================= TASK 1 & 2: 3D CAKE & CANDLE FLAMES ================= */
+    .cake-3d-container {
+      perspective: 1000px;
+      transform-style: preserve-3d;
+    }
     .flame {
       width: 14px;
-      height: 24px;
-      background: radial-gradient(ellipse at bottom, #fff 0%, #fef08a 25%, #f59e0b 60%, #ef4444 100%);
+      height: 26px;
+      background: radial-gradient(ellipse at bottom, #ffffff 0%, #fef08a 25%, #f59e0b 60%, #ef4444 100%);
       border-radius: 50% 50% 35% 35%;
-      box-shadow: 0 0 15px #f59e0b, 0 -5px 10px #ef4444;
+      box-shadow: 0 0 18px #f59e0b, 0 -6px 12px #ef4444, 0 0 35px rgba(245, 158, 11, 0.8);
       animation: flicker 1.2s ease-in-out infinite alternate;
-      transition: all 0.5s ease;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
     }
     .flame.extinguished {
       opacity: 0 !important;
-      transform: scale(0) translateY(-10px) !important;
+      transform: scale(0) translateY(-15px) !important;
     }
     .smoke {
       position: absolute;
       width: 8px;
       height: 8px;
-      background: rgba(200, 200, 200, 0.6);
+      background: rgba(220, 220, 220, 0.7);
       border-radius: 50%;
       opacity: 0;
       pointer-events: none;
     }
     .smoke.active {
-      animation: smokeRise 1.5s ease-out forwards;
+      animation: smokeRise 1.6s ease-out forwards;
     }
     @keyframes smokeRise {
-      0% { opacity: 0.8; transform: translateY(0) scale(1); }
-      100% { opacity: 0; transform: translateY(-40px) scale(3); filter: blur(4px); }
+      0% { opacity: 0.9; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-45px) scale(3.5); filter: blur(4px); }
     }
 
-    /* Custom Canvas Balloon Styling */
+    /* Interactive Canvas Balloon Styling */
     #balloonCanvas {
       position: fixed;
       inset: 0;
       z-index: 5;
-      pointer-events: none;
+      pointer-events: auto; /* Allow clicking balloons to pop! */
     }
 
     /* Typewriter Cursor */
@@ -301,38 +521,57 @@
       0%, 100% { opacity: 1; }
       50% { opacity: 0; }
     }
+
+    /* Music Player Ticker Animation */
+    .ticker-wrap {
+      width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .ticker-move {
+      display: inline-block;
+      white-space: nowrap;
+      animation: ticker 10s linear infinite;
+    }
+    @keyframes ticker {
+      0% { transform: translate3d(0, 0, 0); }
+      100% { transform: translate3d(-50%, 0, 0); }
+    }
   </style>
 </head>
 <body class="h-full min-h-screen flex flex-col justify-between items-center relative select-none">
 
-  <!-- Background Layer -->
-  <div class="mesh-gradient-bg"></div>
+  <!-- Parallax Background Layers -->
+  <div id="meshBg" class="mesh-gradient-bg"></div>
+  <div id="starsBg" class="stars-layer"></div>
   <div class="dither-overlay"></div>
 
-  <!-- Top Progress Stepper (Origin UI Inspired Pattern) -->
+  <!-- Cursor Spotlight Glow -->
+  <div id="cursorSpotlight"></div>
+
+  <!-- Container for Click Sparkle Effects -->
+  <div id="sparkleContainer"></div>
+
+  <!-- Top Progress Stepper -->
   <header class="w-full max-w-xl px-6 pt-6 pb-2 z-20 flex justify-between items-center">
-    <div class="flex items-center space-x-2 bg-white/5 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
+    <!-- Scene Badge -->
+    <div class="flex items-center space-x-2 bg-white/5 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10 shadow-lg">
       <span class="w-2.5 h-2.5 rounded-full bg-birthday-rose animate-ping"></span>
-      <span class="text-xs font-semibold text-white/80 uppercase tracking-widest" id="stepperLabel">Scene 1 of 6</span>
+      <span class="text-xs font-semibold text-white/90 uppercase tracking-widest" id="stepperLabel">Scene 1 of 7</span>
     </div>
     
-    <!-- Progress Indicator Dots -->
+    <!-- Progress Indicator Dots (Clickable to revisit scenes) -->
     <div class="flex items-center space-x-2" id="stepperDots">
-      <div class="w-2.5 h-2.5 rounded-full bg-birthday-rose transition-all duration-300"></div>
-      <div class="w-2.5 h-2.5 rounded-full bg-white/20 transition-all duration-300"></div>
-      <div class="w-2.5 h-2.5 rounded-full bg-white/20 transition-all duration-300"></div>
-      <div class="w-2.5 h-2.5 rounded-full bg-white/20 transition-all duration-300"></div>
-      <div class="w-2.5 h-2.5 rounded-full bg-white/20 transition-all duration-300"></div>
-      <div class="w-2.5 h-2.5 rounded-full bg-white/20 transition-all duration-300"></div>
+      <!-- Generated dynamically in JS -->
     </div>
 
     <!-- Mute / Sound Toggle Button -->
-    <button id="soundToggleBtn" onclick="toggleSound()" class="p-2 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 text-white/80 hover:text-white transition-all" title="Toggle Audio">
+    <button id="soundToggleBtn" onclick="toggleMainAudio()" class="p-2.5 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 text-white/80 hover:text-white transition-all shadow-md active:scale-90" title="Toggle Music & SFX">
       <i data-lucide="volume-2" class="w-4 h-4"></i>
     </button>
   </header>
 
-  <!-- Canvas for Interactive Floating Balloons -->
+  <!-- Interactive Floating Balloons Canvas -->
   <canvas id="balloonCanvas"></canvas>
 
   <!-- MAIN SCENES CONTAINER -->
@@ -357,57 +596,91 @@
         </p>
       </div>
 
-      <!-- Decorative Graphic Card -->
-      <div class="glass-card p-6 rounded-2xl max-w-xs w-full flex flex-col items-center space-y-3 my-2 border-white/10">
-        <div class="w-16 h-16 rounded-full bg-birthday-rose/20 flex items-center justify-center text-birthday-rose shadow-inner">
-          <i data-lucide="lock" class="w-8 h-8"></i>
+      <!-- Graphic Lock Card with Easter Egg Listener (Click 5 times!) -->
+      <div id="easterEggLockCard" onclick="handleEasterEggClick()" class="glass-card glass-card-hover p-6 rounded-2xl max-w-xs w-full flex flex-col items-center space-y-3 my-2 border-white/10 cursor-pointer relative overflow-hidden">
+        <div class="w-16 h-16 rounded-full bg-birthday-rose/20 flex items-center justify-center text-birthday-rose shadow-inner transition-transform active:scale-110">
+          <i data-lucide="lock" id="easterEggIcon" class="w-8 h-8"></i>
         </div>
         <p class="text-xs text-white/60 font-mono">ENCRYPTED WITH LOVE • 100% MAGICAL</p>
+        <span id="easterEggHint" class="text-[10px] text-birthday-rose/70 opacity-0 transition-opacity">Tap 5x for secret 💖</span>
       </div>
 
-      <!-- Start Button (Origin UI Spotlight Button) -->
-      <button onclick="goToPage(2)" class="spotlight-btn group relative px-8 py-4 rounded-2xl bg-gradient-to-r from-birthday-rose via-birthday-purple to-birthday-amber text-white font-bold text-lg shadow-xl shadow-birthday-rose/30 hover:shadow-birthday-purple/50 transition-all duration-300 hover:scale-105 active:scale-95 flex items-center space-x-3">
+      <!-- Start Button (Spotlight & Magnetic) -->
+      <button onclick="startSurpriseAndGoToPage(2)" class="spotlight-btn magnetic-btn group relative px-8 py-4 rounded-2xl bg-gradient-to-r from-birthday-rose via-birthday-purple to-birthday-amber text-white font-bold text-lg shadow-xl shadow-birthday-rose/30 hover:shadow-birthday-purple/50 transition-all duration-300 hover:scale-105 active:scale-95 flex items-center space-x-3">
         <span>Start the Surprise ✨</span>
         <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
       </button>
 
     </section>
 
-    <!-- ================= PAGE 2: GIFT PAGE ================= -->
-    <section id="page2" class="page-scene flex-col items-center text-center space-y-8">
+    <!-- ================= PAGE 2: 3D GIFT PAGE ================= -->
+    <section id="page2" class="page-scene flex-col items-center text-center space-y-6">
       
       <div class="space-y-2">
         <span class="text-xs font-semibold text-birthday-rose uppercase tracking-widest">Stage 2</span>
-        <h2 class="text-4xl sm:text-5xl font-bold text-white">First, tap the gift 🎁</h2>
-        <p class="text-sm text-white/70">Unwrap what is waiting inside for you</p>
+        <h2 class="text-3xl sm:text-4xl font-bold text-white">Press & Hold the 3D Gift 🎁</h2>
+        <p class="text-sm text-white/70">Charge it up until it bursts open with magic!</p>
       </div>
 
       <!-- 3D Gift Box Interactive Area -->
-      <div class="gift-container py-8" onclick="openGift()">
-        <div id="giftBox" class="gift-box">
-          <!-- Lid -->
-          <div class="gift-lid">
-            <div class="gift-lid-ribbon"></div>
-            <!-- Bow -->
-            <div class="gift-bow">
-              <svg viewBox="0 0 60 40" class="w-full h-full text-amber-400 fill-current">
-                <path d="M30 20 C10 -10, -10 10, 20 20 C-10 30, 10 50, 30 20 Z"></path>
-                <path d="M30 20 C50 -10, 70 10, 40 20 C70 30, 50 50, 30 20 Z"></path>
-                <circle cx="30" cy="20" r="5" fill="#f59e0b"></circle>
-              </svg>
+      <div class="py-6">
+        <div class="gift-3d-scene" id="giftScene">
+          <!-- SVG Circular Charge Meter Ring -->
+          <svg class="charge-ring-svg" viewBox="0 0 220 220">
+            <defs>
+              <linearGradient id="chargeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#FF4D8D" />
+                <stop offset="50%" stop-color="#F59E0B" />
+                <stop offset="100%" stop-color="#8B5CF6" />
+              </linearGradient>
+            </defs>
+            <circle class="charge-ring-bg" cx="110" cy="110" r="100" />
+            <circle id="chargeRingFill" class="charge-ring-fill" cx="110" cy="110" r="100" />
+          </svg>
+
+          <!-- 3D Cube Container -->
+          <div id="giftCube" class="gift-3d-cube">
+            <div class="cube-inner-glow"></div>
+
+            <!-- 6 Faces -->
+            <div class="cube-face cube-face-front">
+              <div class="cube-ribbon-v"></div>
+              <div class="cube-ribbon-h"></div>
             </div>
-          </div>
-          <!-- Body -->
-          <div class="gift-body">
-            <div class="gift-body-ribbon"></div>
+            <div class="cube-face cube-face-back">
+              <div class="cube-ribbon-v"></div>
+              <div class="cube-ribbon-h"></div>
+            </div>
+            <div class="cube-face cube-face-left">
+              <div class="cube-ribbon-v"></div>
+              <div class="cube-ribbon-h"></div>
+            </div>
+            <div class="cube-face cube-face-right">
+              <div class="cube-ribbon-v"></div>
+              <div class="cube-ribbon-h"></div>
+            </div>
+            <div class="cube-face cube-face-top">
+              <div class="cube-ribbon-v"></div>
+              <div class="cube-ribbon-h"></div>
+              <div class="cube-bow">
+                <svg viewBox="0 0 60 40" class="w-full h-full text-amber-400 fill-current drop-shadow-md">
+                  <path d="M30 20 C10 -10, -10 10, 20 20 C-10 30, 10 50, 30 20 Z"></path>
+                  <path d="M30 20 C50 -10, 70 10, 40 20 C70 30, 50 50, 30 20 Z"></path>
+                  <circle cx="30" cy="20" r="5" fill="#f59e0b"></circle>
+                </svg>
+              </div>
+            </div>
+            <div class="cube-face cube-face-bottom"></div>
           </div>
         </div>
       </div>
 
-      <p class="text-xs text-white/50 animate-pulse flex items-center space-x-1">
-        <i data-lucide="hand" class="w-3.5 h-3.5"></i>
-        <span>Tap the box to open</span>
-      </p>
+      <div class="space-y-1">
+        <p class="text-xs text-white/60 animate-pulse flex items-center justify-center space-x-1">
+          <i data-lucide="touchpad" class="w-4 h-4 text-birthday-amber"></i>
+          <span id="giftInstructText">Press & Hold (or Click) to Charge</span>
+        </p>
+      </div>
 
     </section>
 
@@ -419,15 +692,14 @@
         <h2 class="text-3xl sm:text-4xl font-bold text-white">Read carefully... 📜</h2>
       </div>
 
-      <!-- Glass Message Card -->
-      <div class="glass-card p-6 sm:p-8 rounded-3xl w-full text-left relative overflow-hidden border-white/15 min-h-[220px] flex flex-col justify-between shadow-2xl">
-        <!-- Floating Ambient Aura Inside Card -->
+      <!-- Glass Message Card with 3D Tilt -->
+      <div class="glass-card glass-card-hover p-6 sm:p-8 rounded-3xl w-full text-left relative overflow-hidden border-white/15 min-h-[220px] flex flex-col justify-between shadow-2xl">
         <div class="absolute -top-10 -right-10 w-32 h-32 bg-birthday-rose/20 rounded-full blur-2xl pointer-events-none"></div>
         <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-birthday-purple/20 rounded-full blur-2xl pointer-events-none"></div>
 
         <div class="space-y-4 relative z-10">
           <div class="flex items-center space-x-2 text-birthday-rose">
-            <i data-lucide="heart" class="w-5 h-5 fill-current"></i>
+            <i data-lucide="heart" class="w-5 h-5 fill-current animate-pulse"></i>
             <span class="text-xs font-bold uppercase tracking-wider">Special Message</span>
           </div>
 
@@ -440,8 +712,8 @@
         </div>
       </div>
 
-      <!-- Action Button (Hidden until typing done or clicked to skip) -->
-      <button id="typingContinueBtn" onclick="goToPage(4)" class="px-8 py-3.5 rounded-xl bg-white text-birthday-dark font-bold text-base shadow-xl hover:bg-white/90 transition-all duration-300 hover:scale-105 opacity-0 pointer-events-none flex items-center space-x-2">
+      <!-- Action Button -->
+      <button id="typingContinueBtn" onclick="goToPage(4)" class="magnetic-btn px-8 py-3.5 rounded-xl bg-white text-birthday-dark font-bold text-base shadow-xl hover:bg-white/90 transition-all duration-300 hover:scale-105 opacity-0 pointer-events-none flex items-center space-x-2">
         <span>Continue</span>
         <i data-lucide="arrow-right" class="w-4 h-4"></i>
       </button>
@@ -456,94 +728,123 @@
         <h2 class="text-3xl sm:text-4xl font-bold text-white">Three Simple Truths 🌟</h2>
       </div>
 
-      <!-- 3 Appreciation Cards Stack -->
+      <!-- Appreciation Cards Stack -->
       <div class="w-full space-y-4" id="cardsContainer">
-        <!-- Cards will be populated dynamically from JS config -->
+        <!-- Rendered dynamically from CONFIG -->
       </div>
 
       <!-- Action Button -->
-      <button onclick="goToPage(5)" class="spotlight-btn px-8 py-4 rounded-2xl bg-gradient-to-r from-birthday-purple to-birthday-rose text-white font-bold text-base shadow-lg shadow-birthday-purple/30 hover:scale-105 transition-transform flex items-center space-x-2 mt-4">
-        <span>One more surprise 🎂</span>
+      <button onclick="goToPage(5)" class="spotlight-btn magnetic-btn px-8 py-4 rounded-2xl bg-gradient-to-r from-birthday-purple to-birthday-rose text-white font-bold text-base shadow-lg shadow-birthday-purple/30 hover:scale-105 transition-transform flex items-center space-x-2 mt-4">
+        <span>View Photo Memories 📸</span>
+        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      </button>
+
+    </section>
+
+    <!-- ================= PAGE 5: NEW 3D POLAROID MEMORIES SCENE ================= -->
+    <section id="page5" class="page-scene flex-col items-center text-center space-y-6 w-full">
+      
+      <div class="space-y-2">
+        <span class="text-xs font-semibold text-birthday-rose uppercase tracking-widest">Memories Board</span>
+        <h2 class="text-3xl sm:text-4xl font-bold text-white">Precious Moments 📸</h2>
+        <p class="text-sm text-white/70">Click or tap any photo to flip and read the note</p>
+      </div>
+
+      <!-- 3D Polaroid Photo Board -->
+      <div class="polaroid-board py-4" id="polaroidBoard">
+        <!-- Rendered dynamically from CONFIG.photos -->
+      </div>
+
+      <!-- Action Button -->
+      <button onclick="goToPage(6)" class="spotlight-btn magnetic-btn px-8 py-4 rounded-2xl bg-gradient-to-r from-birthday-rose to-birthday-amber text-white font-bold text-base shadow-lg shadow-birthday-rose/30 hover:scale-105 transition-transform flex items-center space-x-2 mt-4">
+        <span>Time for the Cake 🎂</span>
         <i data-lucide="sparkles" class="w-4 h-4"></i>
       </button>
 
     </section>
 
-    <!-- ================= PAGE 5: CAKE PAGE ================= -->
-    <section id="page5" class="page-scene flex-col items-center text-center space-y-6">
+    <!-- ================= PAGE 6: 3D CAKE & CANDLES PAGE ================= -->
+    <section id="page6" class="page-scene flex-col items-center text-center space-y-6">
       
       <div class="space-y-2">
         <span class="text-xs font-semibold text-birthday-amber uppercase tracking-widest">Time for a Wish</span>
         <h2 class="text-4xl font-bold text-white">Make a Wish... 🎂</h2>
-        <p class="text-sm text-white/70">Close your eyes and blow out the candles!</p>
+        <p class="text-sm text-white/70">Click each candle to blow it out or use your microphone!</p>
       </div>
 
-      <!-- Birthday Cake Vector Illustration -->
-      <div class="relative py-6 my-2 flex flex-col items-center">
-        <!-- Dither / Glow Behind Cake -->
-        <div class="absolute inset-0 bg-gradient-to-t from-birthday-amber/20 to-birthday-rose/30 rounded-full blur-3xl -z-10"></div>
+      <!-- 3D Layered Cake & Flames -->
+      <div class="relative py-6 my-2 flex flex-col items-center cake-3d-container">
+        <!-- Ambient Backlight Glow -->
+        <div class="absolute inset-0 bg-gradient-to-t from-birthday-amber/30 to-birthday-rose/30 rounded-full blur-3xl -z-10 animate-pulse"></div>
 
         <!-- Flames Row -->
         <div class="flex justify-center space-x-8 mb-1 relative z-20">
-          <div class="relative flex flex-col items-center">
+          <div class="relative flex flex-col items-center cursor-pointer" onclick="extinguishSingleCandle(1)">
             <div id="smoke1" class="smoke top-0"></div>
             <div id="flame1" class="flame"></div>
           </div>
-          <div class="relative flex flex-col items-center">
+          <div class="relative flex flex-col items-center cursor-pointer" onclick="extinguishSingleCandle(2)">
             <div id="smoke2" class="smoke top-0"></div>
             <div id="flame2" class="flame"></div>
           </div>
-          <div class="relative flex flex-col items-center">
+          <div class="relative flex flex-col items-center cursor-pointer" onclick="extinguishSingleCandle(3)">
             <div id="smoke3" class="smoke top-0"></div>
             <div id="flame3" class="flame"></div>
           </div>
         </div>
 
-        <!-- Candles Sticks -->
+        <!-- Candle Sticks -->
         <div class="flex justify-center space-x-8 mb-1">
           <div class="w-2.5 h-10 bg-gradient-to-b from-pink-300 to-pink-500 rounded-t-sm shadow"></div>
           <div class="w-2.5 h-10 bg-gradient-to-b from-yellow-300 to-yellow-500 rounded-t-sm shadow"></div>
           <div class="w-2.5 h-10 bg-gradient-to-b from-purple-300 to-purple-500 rounded-t-sm shadow"></div>
         </div>
 
-        <!-- Cake Body -->
-        <div class="w-56 sm:w-64 h-28 bg-gradient-to-b from-pink-500 via-rose-600 to-purple-800 rounded-2xl shadow-2xl relative overflow-hidden border border-white/20 flex flex-col justify-between p-3">
+        <!-- Cake Tier 1 (Top Layer) -->
+        <div class="w-48 sm:w-56 h-14 bg-gradient-to-b from-rose-400 to-pink-600 rounded-t-2xl shadow-xl relative overflow-hidden border-t border-x border-white/30 flex flex-col justify-between p-2">
           <!-- Frosting Drips -->
-          <div class="w-full flex justify-between space-x-1 -mt-3">
-            <div class="w-8 h-6 bg-white rounded-b-full shadow-md"></div>
-            <div class="w-10 h-8 bg-white rounded-b-full shadow-md"></div>
-            <div class="w-8 h-5 bg-white rounded-b-full shadow-md"></div>
-            <div class="w-9 h-7 bg-white rounded-b-full shadow-md"></div>
-            <div class="w-8 h-6 bg-white rounded-b-full shadow-md"></div>
+          <div class="w-full flex justify-between space-x-1 -mt-2">
+            <div class="w-6 h-5 bg-white rounded-b-full shadow"></div>
+            <div class="w-8 h-6 bg-white rounded-b-full shadow"></div>
+            <div class="w-6 h-4 bg-white rounded-b-full shadow"></div>
+            <div class="w-7 h-5 bg-white rounded-b-full shadow"></div>
+            <div class="w-6 h-5 bg-white rounded-b-full shadow"></div>
           </div>
-          <!-- Sprinkles Decor -->
-          <div class="flex justify-around items-center opacity-80 py-2">
-            <span class="w-2 h-2 rounded-full bg-yellow-300"></span>
-            <span class="w-2 h-3 rounded-full bg-cyan-300 transform rotate-45"></span>
+        </div>
+
+        <!-- Cake Tier 2 (Main Base Layer) -->
+        <div class="w-60 sm:w-72 h-24 bg-gradient-to-b from-pink-500 via-rose-600 to-purple-800 rounded-b-2xl shadow-2xl relative overflow-hidden border border-white/20 flex flex-col justify-between p-3">
+          <div class="flex justify-around items-center opacity-90 py-2">
+            <span class="w-2 h-2 rounded-full bg-yellow-300 animate-ping"></span>
+            <span class="w-2.5 h-3.5 rounded-full bg-cyan-300 transform rotate-45"></span>
             <span class="w-3 h-2 rounded-full bg-white transform -rotate-12"></span>
             <span class="w-2 h-2 rounded-full bg-amber-300"></span>
-            <span class="w-2 h-3 rounded-full bg-pink-300 transform rotate-12"></span>
+            <span class="w-2.5 h-3.5 rounded-full bg-pink-300 transform rotate-12"></span>
           </div>
-          <!-- Bottom Cake Plate -->
           <div class="w-full h-3 bg-white/20 rounded-full"></div>
         </div>
         <!-- Cake Base Stand -->
-        <div class="w-64 sm:w-72 h-4 bg-gradient-to-r from-gray-300 via-white to-gray-300 rounded-full shadow-xl mt-1 border border-white/40"></div>
+        <div class="w-68 sm:w-80 h-5 bg-gradient-to-r from-gray-300 via-white to-gray-300 rounded-full shadow-2xl mt-1 border border-white/40"></div>
       </div>
 
       <!-- Wish Card (Revealed after blowing candles) -->
-      <div id="wishMessageCard" class="hidden glass-card p-4 rounded-2xl max-w-sm w-full border-birthday-amber/40 text-birthday-amber font-serif text-center italic text-base animate-float">
+      <div id="wishMessageCard" class="hidden glass-card glass-card-hover p-4 rounded-2xl max-w-sm w-full border-birthday-amber/40 text-birthday-amber font-serif text-center italic text-base animate-float">
         <p id="wishMessageContent">"✨ May all your biggest dreams and quietest wishes come true this year! ✨"</p>
       </div>
 
-      <!-- Blow Button -->
-      <div class="space-y-3">
-        <button id="blowCandlesBtn" onclick="blowOutCandles()" class="spotlight-btn px-8 py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-rose-500 text-white font-bold text-base shadow-xl shadow-amber-500/20 hover:scale-105 transition-transform flex items-center space-x-2 mx-auto">
+      <!-- Blow Buttons Area -->
+      <div class="flex flex-wrap justify-center gap-3">
+        <button id="blowCandlesBtn" onclick="blowOutCandles()" class="spotlight-btn magnetic-btn px-6 py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-rose-500 text-white font-bold text-base shadow-xl shadow-amber-500/20 hover:scale-105 transition-transform flex items-center space-x-2">
           <i data-lucide="wind" class="w-5 h-5"></i>
-          <span>Blow the candles 💨</span>
+          <span>Blow all candles 💨</span>
         </button>
 
-        <button id="afterBlowNextBtn" onclick="goToPage(6)" class="hidden px-8 py-3.5 rounded-2xl bg-gradient-to-r from-birthday-rose to-birthday-purple text-white font-bold text-base shadow-xl shadow-birthday-rose/30 hover:scale-105 transition-transform flex items-center space-x-2 mx-auto">
+        <button id="micBlowBtn" onclick="toggleMicBlow()" class="px-5 py-3.5 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold text-sm transition-all flex items-center space-x-2">
+          <i data-lucide="mic" class="w-4 h-4 text-amber-300"></i>
+          <span id="micBtnText">Enable Mic Blow 🎤</span>
+        </button>
+
+        <button id="afterBlowNextBtn" onclick="goToPage(7)" class="hidden magnetic-btn px-8 py-3.5 rounded-2xl bg-gradient-to-r from-birthday-rose to-birthday-purple text-white font-bold text-base shadow-xl shadow-birthday-rose/30 hover:scale-105 transition-transform flex items-center space-x-2">
           <span>Final surprise 🎉</span>
           <i data-lucide="arrow-right" class="w-5 h-5"></i>
         </button>
@@ -551,25 +852,25 @@
 
     </section>
 
-    <!-- ================= PAGE 6: FINAL BIRTHDAY WISH ================= -->
-    <section id="page6" class="page-scene flex-col items-center text-center space-y-6 w-full">
+    <!-- ================= PAGE 7: FINAL BIRTHDAY WISH ================= -->
+    <section id="page7" class="page-scene flex-col items-center text-center space-y-6 w-full">
       
       <!-- Celebratory Pill Badge -->
       <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-birthday-rose/20 border border-birthday-rose/50 text-birthday-rose text-xs font-bold tracking-widest uppercase">
-        <i data-lucide="party-popper" class="w-4 h-4"></i>
+        <i data-lucide="party-popper" class="w-4 h-4 animate-bounce"></i>
         <span>Happy Birthday!</span>
       </div>
 
-      <!-- Main Animated Glowing Name Heading -->
+      <!-- Main Animated Extruded 3D Glowing Text -->
       <div class="space-y-2">
         <h1 class="text-5xl sm:text-6xl font-extrabold tracking-tight">
           Happy Birthday, <br/>
-          <span id="finalPersonName" class="text-shimmer font-handwriting text-6xl sm:text-7xl">Janu</span>! 🎉
+          <span id="finalPersonName" class="text-shimmer text-3d-glow font-handwriting text-6xl sm:text-7xl">Janu</span>! 🎉
         </h1>
       </div>
 
-      <!-- Final Heartfelt Message Card -->
-      <div class="glass-card p-6 sm:p-8 rounded-3xl w-full text-center space-y-4 border-white/20 shadow-2xl relative overflow-hidden">
+      <!-- Final Heartfelt Message Card with 3D Tilt -->
+      <div class="glass-card glass-card-hover p-6 sm:p-8 rounded-3xl w-full text-center space-y-4 border-white/20 shadow-2xl relative overflow-hidden">
         <p id="finalMessageContent" class="text-base sm:text-lg text-white/90 leading-relaxed font-medium">
           Wishing you a year filled with endless adventures, unforgettable memories, pure happiness, and all the love in the universe. Keep shining bright!
         </p>
@@ -579,19 +880,19 @@
           <div class="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-white/10 border border-white/15">
             <span class="text-xs text-white/60">From:</span>
             <span id="finalSenderName" class="text-sm font-bold text-birthday-rose">Dhanush</span>
-            <i data-lucide="heart" class="w-4 h-4 text-birthday-rose fill-current"></i>
+            <i data-lucide="heart" class="w-4 h-4 text-birthday-rose fill-current animate-pulse"></i>
           </div>
         </div>
       </div>
 
       <!-- Interactive Action Buttons -->
       <div class="flex flex-wrap justify-center gap-4 w-full pt-2">
-        <button onclick="triggerConfetti()" class="px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold text-sm transition-all flex items-center space-x-2 backdrop-blur-md">
+        <button onclick="triggerConfetti()" class="magnetic-btn px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold text-sm transition-all flex items-center space-x-2 backdrop-blur-md">
           <i data-lucide="sparkles" class="w-4 h-4 text-amber-300"></i>
           <span>More Confetti 🎉</span>
         </button>
 
-        <button onclick="goToPage(1)" class="px-6 py-3 rounded-xl bg-gradient-to-r from-birthday-rose to-birthday-purple text-white font-semibold text-sm shadow-lg hover:scale-105 transition-transform flex items-center space-x-2">
+        <button onclick="goToPage(1)" class="spotlight-btn magnetic-btn px-6 py-3 rounded-xl bg-gradient-to-r from-birthday-rose to-birthday-purple text-white font-semibold text-sm shadow-lg hover:scale-105 transition-transform flex items-center space-x-2">
           <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
           <span>Replay Experience</span>
         </button>
@@ -601,12 +902,69 @@
 
   </main>
 
+  <!-- ================= FLOATING MUSIC CONTROL PILL (TASK 4) ================= -->
+  <div id="musicPlayerPill" class="fixed bottom-4 right-4 z-40 bg-black/60 backdrop-blur-xl border border-white/20 rounded-full px-4 py-2 flex items-center space-x-3 shadow-2xl transition-all hover:border-birthday-rose/50 max-w-[320px] sm:max-w-xs">
+    <button onclick="prevTrack()" class="text-white/70 hover:text-white transition-colors" title="Previous Song">
+      <i data-lucide="skip-back" class="w-4 h-4"></i>
+    </button>
+
+    <button id="pillPlayBtn" onclick="togglePlayPause()" class="w-8 h-8 rounded-full bg-birthday-rose text-white flex items-center justify-center shadow-lg hover:scale-105 transition-transform" title="Play / Pause">
+      <i data-lucide="play" id="pillPlayIcon" class="w-4 h-4 fill-current ml-0.5"></i>
+    </button>
+
+    <button onclick="nextTrack()" class="text-white/70 hover:text-white transition-colors" title="Next Song">
+      <i data-lucide="skip-forward" class="w-4 h-4"></i>
+    </button>
+
+    <div class="flex-1 overflow-hidden text-xs text-white/90 font-medium">
+      <div class="ticker-wrap">
+        <div id="songTitleTicker" class="ticker-move">
+          City of Stars – La La Land &nbsp;&nbsp;&bull;&nbsp;&nbsp; City of Stars – La La Land &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+        </div>
+      </div>
+    </div>
+
+    <!-- Volume Control -->
+    <div class="hidden sm:flex items-center space-x-1">
+      <i data-lucide="volume-1" class="w-3.5 h-3.5 text-white/50"></i>
+      <input type="range" id="volumeSlider" min="0" max="100" value="80" oninput="changeVolume(this.value)" class="w-14 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer accent-birthday-rose">
+    </div>
+  </div>
+
+  <!-- Music Autoplay Fallback Prompt Pill (Shown if browser blocks un-muted audio) -->
+  <div id="musicAutoplayFallback" onclick="startAudioPlayback()" class="fixed bottom-16 right-4 z-40 bg-gradient-to-r from-birthday-rose to-birthday-purple text-white px-4 py-2 rounded-full font-bold text-xs shadow-xl cursor-pointer hidden items-center space-x-2 animate-bounce">
+    <i data-lucide="music" class="w-4 h-4"></i>
+    <span>Tap to play music 🎵</span>
+  </div>
+
+  <!-- Spotify Embed Card Container (Hidden unless a Spotify track is playing) -->
+  <div id="spotifyEmbedCard" class="fixed bottom-20 right-4 z-40 hidden max-w-xs w-full bg-black/80 backdrop-blur-md p-2 rounded-2xl border border-white/20 shadow-2xl">
+    <iframe id="spotifyIframe" src="" width="100%" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+  </div>
+
+  <!-- Hidden Container for YouTube IFrame Player -->
+  <div id="ytPlayerContainer" class="fixed -bottom-96 opacity-0 pointer-events-none w-1 h-1 overflow-hidden">
+    <div id="ytPlayer"></div>
+  </div>
+
+  <!-- Hidden Easter Egg Secret Message Modal -->
+  <div id="easterEggModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden justify-center items-center p-4">
+    <div class="glass-card max-w-sm w-full p-6 rounded-3xl border-birthday-rose/50 space-y-4 text-center">
+      <div class="w-16 h-16 rounded-full bg-birthday-rose/20 text-birthday-rose flex items-center justify-center mx-auto shadow-inner">
+        <i data-lucide="sparkles" class="w-8 h-8 animate-spin"></i>
+      </div>
+      <h3 class="text-xl font-bold text-white">Secret Easter Egg Unlocked! 💖</h3>
+      <p id="easterEggText" class="text-sm text-white/90 leading-relaxed font-medium"></p>
+      <button onclick="closeEasterEggModal()" class="px-6 py-2.5 rounded-xl bg-birthday-rose text-white text-xs font-bold shadow-lg hover:bg-rose-600">Close Secret ✨</button>
+    </div>
+  </div>
+
   <!-- Footer Info -->
   <footer class="w-full max-w-xl px-6 py-4 z-20 text-center text-xs text-white/40">
     Made with ❤️ for someone special • <button onclick="openPersonalizeModal()" class="underline hover:text-white transition-colors">Edit Personalization</button>
   </footer>
 
-  <!-- PERSONALIZATION MODAL (Allows instant customizing of name/message in browser) -->
+  <!-- PERSONALIZATION MODAL -->
   <div id="customModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden justify-center items-center p-4">
     <div class="glass-card max-w-md w-full p-6 rounded-3xl border-white/20 space-y-4">
       <div class="flex justify-between items-center border-b border-white/10 pb-3">
@@ -642,8 +1000,8 @@
   <!-- JAVASCRIPT CODE -->
   <script>
     /* ==========================================================================
-       PERSONALIZATION CONFIGURATION
-       Easily edit these variables to customize the birthday experience!
+       PRIMARY CONFIGURATION OBJECT (TASK 5)
+       All personalization, names, messages, photos, and music streaming links!
        ========================================================================== */
     const CONFIG = {
       birthdayPersonName: "Janu",              // Name of the birthday person
@@ -666,50 +1024,104 @@
           text: "You deserve all the joy, laughter, and magical moments coming your way."
         }
       ],
+      photos: [
+        {
+          url: "assets/photos/photo1.jpg",
+          caption: "Sweetest Memories 💖",
+          date: "Special Moment #1",
+          note: "Every picture holds a memory, but this one reminds me how special you are!"
+        },
+        {
+          url: "assets/photos/photo2.jpg",
+          caption: "Unforgettable Smile ✨",
+          date: "Special Moment #2",
+          note: "May your day be filled with endless smiles and happiness like this!"
+        }
+      ],
       wishMessage: "✨ May all your biggest dreams and quietest wishes come true this year! ✨",
       finalWishMessage: "Wishing you a year filled with endless adventures, unforgettable memories, pure happiness, and all the love in the universe. Keep shining bright! 🚀✨",
-      enableAudio: true
+      easterEggMessage: "💖 Secret Unlocked: You are loved more than 3000! Thank you for being so wonderful! ✨",
+      music: {
+        enableAudio: true,
+        autoplayOnStart: true,
+        localFallbackUrl: "assets/music/birthday.mp3",
+        playlist: [
+          { title: "City of Stars – La La Land",           type: "youtube", url: "https://youtu.be/q9TQFZJ2biM?si=c4-VZvZo1SA5Cumm" },
+          { title: "Mia & Sebastian's Theme – La La Land", type: "youtube", url: "https://youtu.be/srXDMzK_GZc?si=rNxJCSOkJJr1nAdC" },
+          { title: "Kannazhaga – 3",                       type: "youtube", url: "https://youtu.be/br40KCv6Gf0?si=kHvMfRUtDdsJfeS0" }
+        ]
+      }
     };
 
     /* ==========================================================================
-       STATE MANAGEMENT
+       GLOBAL STATE VARIABLES
        ========================================================================== */
+    const TOTAL_SCENES = 7;
     let currentPage = 1;
+    let maxUnlockedPage = 1;
     let audioContext = null;
     let isMuted = false;
     let typingTimer = null;
     let typingFinished = false;
 
-    // Initialize Page
+    // Music Player State
+    let currentSongIndex = 0;
+    let ytPlayer = null;
+    let isYTReady = false;
+    let isPlaying = false;
+    let currentVolume = 80;
+    let useLocalAudioFallback = false;
+    let localAudioElement = null;
+
+    // Micro-interactions State
+    let giftChargeProgress = 0;
+    let giftChargeInterval = null;
+    let isGiftOpened = false;
+    let easterEggClicks = 0;
+    let blownCandles = [false, false, false];
+    let micStream = null;
+    let micAnalyser = null;
+    let micAnimationId = null;
+
+    /* ==========================================================================
+       INITIALIZATION ON DOM LOAD
+       ========================================================================== */
     document.addEventListener("DOMContentLoaded", () => {
       lucide.createIcons();
       applyConfigToDOM();
       renderAppreciationCards();
+      renderPolaroidBoard();
+      setupStepperDots();
       setupBalloonCanvas();
+      initParallaxAndSpotlight();
+      init3DTiltCards();
+      initMagneticButtons();
+      initGiftPressAndHold();
+      initClickSparkles();
+      checkLocalAudioFallback();
     });
 
-    // Apply configuration parameters to DOM elements
+    // Apply configuration values to DOM elements
     function applyConfigToDOM() {
       document.getElementById("finalPersonName").innerText = CONFIG.birthdayPersonName;
       document.getElementById("finalSenderName").innerText = CONFIG.yourName;
       document.getElementById("finalMessageContent").innerText = CONFIG.finalWishMessage;
       document.getElementById("wishMessageContent").innerText = CONFIG.wishMessage;
 
-      // Populate input fields in modal
       document.getElementById("inputPersonName").value = CONFIG.birthdayPersonName;
       document.getElementById("inputYourName").value = CONFIG.yourName;
       document.getElementById("inputCustomMessage").value = CONFIG.customMessage;
     }
 
-    // Render 3 Appreciation Cards (Page 4)
+    // Render Appreciation Cards (Scene 4)
     function renderAppreciationCards() {
       const container = document.getElementById("cardsContainer");
       container.innerHTML = "";
 
       CONFIG.cards.forEach((card, index) => {
         const cardEl = document.createElement("div");
-        cardEl.className = "glass-card glass-card-hover p-5 rounded-2xl text-left border-white/15 flex items-start space-x-4";
-        cardEl.style.animationDelay = `${index * 0.2}s`;
+        cardEl.className = "glass-card glass-card-hover p-5 rounded-2xl text-left border-white/15 flex items-start space-x-4 tilt-card-3d";
+        cardEl.style.animationDelay = `${index * 0.15}s`;
         cardEl.innerHTML = `
           <div class="w-12 h-12 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center text-2xl shrink-0 shadow-inner">
             ${card.emoji}
@@ -723,13 +1135,92 @@
       });
     }
 
+    // Render Polaroid Memories Board (Scene 5 - Task 3)
+    function renderPolaroidBoard() {
+      const board = document.getElementById("polaroidBoard");
+      board.innerHTML = "";
+
+      const rotations = [-4, 3, -2, 5];
+
+      CONFIG.photos.forEach((photo, idx) => {
+        const wrapper = document.createElement("div");
+        wrapper.className = "polaroid-card-wrapper tilt-card-3d";
+        const rot = rotations[idx % rotations.length];
+        wrapper.style.transform = `rotate(${rot}deg)`;
+
+        wrapper.innerHTML = `
+          <div class="polaroid-tape"></div>
+          <div class="polaroid-card-inner" onclick="flipPolaroidCard(this)">
+            <!-- Front Face -->
+            <div class="polaroid-front flex flex-col justify-between">
+              <div class="w-full h-44 bg-gray-200 rounded-lg overflow-hidden relative shadow-inner">
+                <img src="${photo.url}" alt="${photo.caption}" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1513151233558-d860c5398176?q=80&w=400&auto=format&fit=crop';">
+              </div>
+              <div class="pt-2 text-center">
+                <p class="font-polaroid text-xl font-bold text-gray-800 leading-tight">${photo.caption}</p>
+                <p class="text-[10px] text-gray-500 uppercase tracking-wider mt-0.5">${photo.date || 'Memory'}</p>
+              </div>
+            </div>
+            <!-- Back Face -->
+            <div class="polaroid-back p-4 flex flex-col justify-between text-center">
+              <div class="space-y-2 my-auto">
+                <i data-lucide="heart" class="w-6 h-6 text-birthday-rose fill-current mx-auto animate-pulse"></i>
+                <p class="font-serif italic text-sm text-white/90 leading-relaxed">"${photo.note || photo.caption}"</p>
+              </div>
+              <p class="text-[10px] text-white/40 uppercase tracking-widest font-mono">Tap to flip back</p>
+            </div>
+          </div>
+        `;
+        board.appendChild(wrapper);
+      });
+      lucide.createIcons();
+    }
+
+    function flipPolaroidCard(cardInner) {
+      playClickSound();
+      const wrapper = cardInner.closest('.polaroid-card-wrapper');
+      wrapper.classList.toggle('flipped');
+    }
+
     /* ==========================================================================
-       NAVIGATION & SCENE SWITCHING
+       STEPPER & NAVIGATION
        ========================================================================== */
+    function setupStepperDots() {
+      const container = document.getElementById("stepperDots");
+      container.innerHTML = "";
+      for (let i = 1; i <= TOTAL_SCENES; i++) {
+        const dot = document.createElement("button");
+        dot.className = i === 1 
+          ? "w-6 h-2.5 rounded-full bg-birthday-rose transition-all duration-300 shadow-md cursor-pointer"
+          : "w-2.5 h-2.5 rounded-full bg-white/20 transition-all duration-300 cursor-pointer hover:bg-white/40";
+        dot.title = `Go to Scene ${i}`;
+        dot.onclick = () => jumpToPage(i);
+        container.appendChild(dot);
+      }
+    }
+
+    function updateStepper(step) {
+      document.getElementById("stepperLabel").innerText = `Scene ${step} of ${TOTAL_SCENES}`;
+      const dots = document.getElementById("stepperDots").children;
+      for (let i = 0; i < dots.length; i++) {
+        if (i === step - 1) {
+          dots[i].className = "w-6 h-2.5 rounded-full bg-birthday-rose transition-all duration-300 shadow-md cursor-pointer";
+        } else if (i < maxUnlockedPage) {
+          dots[i].className = "w-2.5 h-2.5 rounded-full bg-birthday-rose/60 transition-all duration-300 cursor-pointer hover:bg-birthday-rose";
+        } else {
+          dots[i].className = "w-2.5 h-2.5 rounded-full bg-white/20 transition-all duration-300 cursor-pointer hover:bg-white/40";
+        }
+      }
+    }
+
     function goToPage(pageNumber) {
-      if (pageNumber < 1 || pageNumber > 6) return;
+      if (pageNumber < 1 || pageNumber > TOTAL_SCENES) return;
 
       playChimeSound();
+
+      if (pageNumber > maxUnlockedPage) {
+        maxUnlockedPage = pageNumber;
+      }
 
       const prevPageEl = document.getElementById(`page${currentPage}`);
       const nextPageEl = document.getElementById(`page${pageNumber}`);
@@ -741,49 +1232,113 @@
         if (nextPageEl) nextPageEl.classList.add("active");
         updateStepper(currentPage);
 
-        // Page specific triggers
+        // Page specific actions
         if (currentPage === 3) {
           startTypingMessage();
-        } else if (currentPage === 6) {
+        } else if (currentPage === 7) {
           triggerConfetti();
           startBalloonsAnimation();
         }
       }, 300);
     }
 
-    function updateStepper(step) {
-      document.getElementById("stepperLabel").innerText = `Scene ${step} of 6`;
-      const dots = document.getElementById("stepperDots").children;
-      for (let i = 0; i < dots.length; i++) {
-        if (i === step - 1) {
-          dots[i].className = "w-6 h-2.5 rounded-full bg-birthday-rose transition-all duration-300";
-        } else {
-          dots[i].className = "w-2.5 h-2.5 rounded-full bg-white/20 transition-all duration-300";
-        }
+    function jumpToPage(pageNumber) {
+      // Allow revisiting any scene up to maxUnlockedPage, or any scene once user has reached scene 7
+      if (pageNumber <= maxUnlockedPage || maxUnlockedPage === TOTAL_SCENES) {
+        goToPage(pageNumber);
       }
     }
 
-    /* ==========================================================================
-       PAGE 2: GIFT BOX ANIMATION
-       ========================================================================== */
-    function openGift() {
-      const giftBox = document.getElementById("giftBox");
-      if (giftBox.classList.contains("opened")) return;
-
-      playPopSound();
-      giftBox.classList.add("opened");
-
-      // Trigger sparkles
-      triggerMiniConfetti();
-
-      // Auto transition to Page 3 after opening
-      setTimeout(() => {
-        goToPage(3);
-      }, 1400);
+    function startSurpriseAndGoToPage(targetPage) {
+      startAudioPlayback();
+      goToPage(targetPage);
     }
 
     /* ==========================================================================
-       PAGE 3: TYPEWRITER ANIMATION
+       TASK 1 & 2: 3D GIFT BOX WITH PRESS-AND-HOLD CHARGE
+       ========================================================================== */
+    function initGiftPressAndHold() {
+      const giftScene = document.getElementById("giftScene");
+      if (!giftScene) return;
+
+      const startCharge = (e) => {
+        if (isGiftOpened) return;
+        e.preventDefault();
+        const giftCube = document.getElementById("giftCube");
+        giftCube.classList.add("charging");
+        document.getElementById("giftInstructText").innerText = "Charging Magic... ⚡ Hold on!";
+
+        if (giftChargeInterval) clearInterval(giftChargeInterval);
+
+        giftChargeInterval = setInterval(() => {
+          giftChargeProgress += 4;
+          updateChargeRing(giftChargeProgress);
+          playClickSound();
+
+          if (giftChargeProgress >= 100) {
+            clearInterval(giftChargeInterval);
+            giftChargeInterval = null;
+            burstOpenGift();
+          }
+        }, 40);
+      };
+
+      const stopCharge = () => {
+        if (isGiftOpened) return;
+        const giftCube = document.getElementById("giftCube");
+        giftCube.classList.remove("charging");
+
+        if (giftChargeProgress < 100) {
+          if (giftChargeInterval) clearInterval(giftChargeInterval);
+          giftChargeInterval = null;
+          // Decay charge back to 0
+          const decay = setInterval(() => {
+            if (giftChargeProgress <= 0 || isGiftOpened) {
+              clearInterval(decay);
+              giftChargeProgress = 0;
+              updateChargeRing(0);
+              document.getElementById("giftInstructText").innerText = "Press & Hold to Charge";
+            } else {
+              giftChargeProgress -= 10;
+              updateChargeRing(giftChargeProgress);
+            }
+          }, 30);
+        }
+      };
+
+      giftScene.addEventListener("mousedown", startCharge);
+      giftScene.addEventListener("mouseup", stopCharge);
+      giftScene.addEventListener("mouseleave", stopCharge);
+      giftScene.addEventListener("touchstart", startCharge, { passive: false });
+      giftScene.addEventListener("touchend", stopCharge);
+    }
+
+    function updateChargeRing(progress) {
+      const ringFill = document.getElementById("chargeRingFill");
+      const circumference = 628;
+      const offset = circumference - (progress / 100) * circumference;
+      ringFill.style.strokeDashoffset = offset;
+    }
+
+    function burstOpenGift() {
+      if (isGiftOpened) return;
+      isGiftOpened = true;
+      const giftCube = document.getElementById("giftCube");
+      giftCube.classList.remove("charging");
+      giftCube.classList.add("opened");
+
+      playPopSound();
+      triggerConfetti();
+
+      document.getElementById("giftInstructText").innerText = "✨ MAGIC UNLOCKED! ✨";
+
+      setTimeout(() => {
+        goToPage(3);
+      }, 1500);
+    }
+
+    /* ==========================================================================
+       TASK 2: PAGE 3 TYPEWRITER ANIMATION
        ========================================================================== */
     function startTypingMessage() {
       const textContainer = document.getElementById("typedMessageText");
@@ -808,7 +1363,6 @@
           typingFinished = true;
           textContainer.classList.remove("typing-cursor");
           
-          // Reveal Continue Button
           continueBtn.style.opacity = "1";
           continueBtn.style.pointerEvents = "auto";
         }
@@ -816,24 +1370,37 @@
     }
 
     /* ==========================================================================
-       PAGE 5: CAKE & CANDLE BLOWING
+       TASK 2: PAGE 6 CAKE & CANDLES (INDIVIDUAL BLOW & MIC DETECTION)
        ========================================================================== */
-    function blowOutCandles() {
+    function extinguishSingleCandle(index) {
+      if (blownCandles[index - 1]) return;
+      blownCandles[index - 1] = true;
       playBlowSound();
 
-      // Extinguish flames
-      document.getElementById("flame1").classList.add("extinguished");
-      document.getElementById("flame2").classList.add("extinguished");
-      document.getElementById("flame3").classList.add("extinguished");
+      document.getElementById(`flame${index}`).classList.add("extinguished");
+      document.getElementById(`smoke${index}`).classList.add("active");
 
-      // Smoke rise
-      document.getElementById("smoke1").classList.add("active");
-      document.getElementById("smoke2").classList.add("active");
-      document.getElementById("smoke3").classList.add("active");
+      // Check if all 3 are blown
+      if (blownCandles.every(b => b)) {
+        onAllCandlesBlown();
+      }
+    }
 
-      // Hide Blow button & show wish card + next button
+    function blowOutCandles() {
+      extinguishSingleCandle(1);
+      extinguishSingleCandle(2);
+      extinguishSingleCandle(3);
+    }
+
+    function onAllCandlesBlown() {
       document.getElementById("blowCandlesBtn").classList.add("hidden");
-      
+      document.getElementById("micBlowBtn").classList.add("hidden");
+
+      if (micStream) {
+        micStream.getTracks().forEach(track => track.stop());
+        if (micAnimationId) cancelAnimationFrame(micAnimationId);
+      }
+
       setTimeout(() => {
         document.getElementById("wishMessageCard").classList.remove("hidden");
         document.getElementById("afterBlowNextBtn").classList.remove("hidden");
@@ -841,46 +1408,314 @@
       }, 600);
     }
 
+    // Optional Microphone Blow Detection
+    async function toggleMicBlow() {
+      const btnText = document.getElementById("micBtnText");
+      if (micStream) {
+        micStream.getTracks().forEach(track => track.stop());
+        micStream = null;
+        if (micAnimationId) cancelAnimationFrame(micAnimationId);
+        btnText.innerText = "Enable Mic Blow 🎤";
+        return;
+      }
+
+      try {
+        micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        btnText.innerText = "Mic Active 🎤 (Blow now!)";
+        const audioCtx = getAudioContext();
+        const source = audioCtx.createMediaStreamSource(micStream);
+        micAnalyser = audioCtx.createAnalyser();
+        micAnalyser.fftSize = 256;
+        source.connect(micAnalyser);
+
+        const dataArray = new Uint8Array(micAnalyser.frequencyBinCount);
+
+        const detectBlow = () => {
+          micAnalyser.getByteFrequencyData(dataArray);
+          let sum = 0;
+          for (let i = 0; i < dataArray.length; i++) {
+            sum += dataArray[i];
+          }
+          let average = sum / dataArray.length;
+
+          if (average > 65) {
+            blowOutCandles();
+          } else {
+            micAnimationId = requestAnimationFrame(detectBlow);
+          }
+        };
+        detectBlow();
+
+      } catch (err) {
+        alert("Microphone access blocked or unavailable. Click candles directly to blow!");
+        btnText.innerText = "Mic Unavailable";
+      }
+    }
+
     /* ==========================================================================
-       CELEBRATION: CANVAS CONFETTI & BALLOONS
+       TASK 2: EASTER EGG LISTENER (5 CLICKS ON LOCK ICON)
        ========================================================================== */
-    function triggerConfetti() {
-      if (typeof confetti === 'function') {
-        // Double burst explosion
-        confetti({
-          particleCount: 80,
-          spread: 70,
-          origin: { y: 0.6 }
-        });
-        setTimeout(() => {
-          confetti({
-            particleCount: 50,
-            angle: 60,
-            spread: 55,
-            origin: { x: 0 }
-          });
-          confetti({
-            particleCount: 50,
-            angle: 120,
-            spread: 55,
-            origin: { x: 1 }
-          });
-        }, 250);
+    function handleEasterEggClick() {
+      easterEggClicks++;
+      const hint = document.getElementById("easterEggHint");
+      const icon = document.getElementById("easterEggIcon");
+      playClickSound();
+
+      if (easterEggClicks >= 2) {
+        hint.style.opacity = "1";
+        hint.innerText = `${5 - easterEggClicks} more taps... 💖`;
+      }
+
+      if (easterEggClicks >= 5) {
+        easterEggClicks = 0;
+        hint.innerText = "Tap 5x for secret 💖";
+        showEasterEggModal();
       }
     }
 
-    function triggerMiniConfetti() {
-      if (typeof confetti === 'function') {
-        confetti({
-          particleCount: 30,
-          spread: 50,
-          origin: { y: 0.7 },
-          colors: ['#FF4D8D', '#8B5CF6', '#F59E0B']
+    function showEasterEggModal() {
+      playChimeSound();
+      triggerConfetti();
+      document.getElementById("easterEggText").innerText = CONFIG.easterEggMessage;
+      const modal = document.getElementById("easterEggModal");
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    }
+
+    function closeEasterEggModal() {
+      const modal = document.getElementById("easterEggModal");
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+    }
+
+    /* ==========================================================================
+       TASK 4: LEGAL STREAMING MUSIC CONTROLLER (YOUTUBE & SPOTIFY)
+       ========================================================================== */
+    function extractYouTubeId(url) {
+      if (!url) return null;
+      const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+      return match ? match[1] : null;
+    }
+
+    function onYouTubeIframeAPIReady() {
+      const initialSong = CONFIG.music.playlist[0];
+      const initialVidId = extractYouTubeId(initialSong.url) || "q9TQFZJ2biM";
+
+      ytPlayer = new YT.Player('ytPlayer', {
+        height: '100',
+        width: '100',
+        videoId: initialVidId,
+        playerVars: {
+          'autoplay': 0,
+          'controls': 0,
+          'disablekb': 1,
+          'fs': 0,
+          'playsinline': 1
+        },
+        events: {
+          'onReady': onPlayerReady,
+          'onStateChange': onPlayerStateChange,
+          'onError': onPlayerError
+        }
+      });
+    }
+
+    function onPlayerReady(event) {
+      isYTReady = true;
+      ytPlayer.setVolume(currentVolume);
+      updateSongTitleDisplay();
+    }
+
+    function onPlayerStateChange(event) {
+      if (event.data === YT.PlayerState.ENDED) {
+        nextTrack();
+      } else if (event.data === YT.PlayerState.PLAYING) {
+        isPlaying = true;
+        updatePlayIcons(true);
+        hideAutoplayFallback();
+      } else if (event.data === YT.PlayerState.PAUSED) {
+        isPlaying = false;
+        updatePlayIcons(false);
+      }
+    }
+
+    function onPlayerError(event) {
+      console.warn("YouTube video error or un-embeddable. Skipping to next song...", event.data);
+      nextTrack();
+    }
+
+    function checkLocalAudioFallback() {
+      // Test if local audio exists
+      if (CONFIG.music.localFallbackUrl) {
+        const audio = new Audio();
+        audio.src = CONFIG.music.localFallbackUrl;
+        audio.addEventListener('canplaythrough', () => {
+          useLocalAudioFallback = true;
+          localAudioElement = audio;
+          localAudioElement.loop = true;
         });
       }
     }
 
-    // Balloon Canvas Physics
+    function startAudioPlayback() {
+      hideAutoplayFallback();
+
+      if (useLocalAudioFallback && localAudioElement) {
+        localAudioElement.play().then(() => {
+          isPlaying = true;
+          updatePlayIcons(true);
+        }).catch(err => console.log("Local audio blocked", err));
+        return;
+      }
+
+      const song = CONFIG.music.playlist[currentSongIndex];
+      if (song.type === "spotify") {
+        showSpotifyPlayer(song.url);
+        return;
+      }
+
+      if (isYTReady && ytPlayer) {
+        try {
+          ytPlayer.playVideo();
+          isPlaying = true;
+          updatePlayIcons(true);
+        } catch (e) {
+          showAutoplayFallback();
+        }
+      } else {
+        showAutoplayFallback();
+      }
+    }
+
+    function togglePlayPause() {
+      if (useLocalAudioFallback && localAudioElement) {
+        if (isPlaying) {
+          localAudioElement.pause();
+          isPlaying = false;
+        } else {
+          localAudioElement.play();
+          isPlaying = true;
+        }
+        updatePlayIcons(isPlaying);
+        return;
+      }
+
+      const song = CONFIG.music.playlist[currentSongIndex];
+      if (song.type === "spotify") {
+        const spotifyCard = document.getElementById("spotifyEmbedCard");
+        spotifyCard.classList.toggle("hidden");
+        return;
+      }
+
+      if (!isYTReady || !ytPlayer) {
+        startAudioPlayback();
+        return;
+      }
+
+      if (isPlaying) {
+        ytPlayer.pauseVideo();
+        isPlaying = false;
+        updatePlayIcons(false);
+      } else {
+        ytPlayer.playVideo();
+        isPlaying = true;
+        updatePlayIcons(true);
+      }
+    }
+
+    function toggleMainAudio() {
+      togglePlayPause();
+    }
+
+    function nextTrack() {
+      currentSongIndex = (currentSongIndex + 1) % CONFIG.music.playlist.length;
+      loadCurrentTrack();
+    }
+
+    function prevTrack() {
+      currentSongIndex = (currentSongIndex - 1 + CONFIG.music.playlist.length) % CONFIG.music.playlist.length;
+      loadCurrentTrack();
+    }
+
+    function loadCurrentTrack() {
+      const song = CONFIG.music.playlist[currentSongIndex];
+      updateSongTitleDisplay();
+
+      if (song.type === "spotify") {
+        if (ytPlayer && isYTReady) ytPlayer.pauseVideo();
+        showSpotifyPlayer(song.url);
+        return;
+      } else {
+        hideSpotifyPlayer();
+      }
+
+      const vidId = extractYouTubeId(song.url);
+      if (vidId && isYTReady && ytPlayer) {
+        ytPlayer.loadVideoById(vidId);
+        isPlaying = true;
+        updatePlayIcons(true);
+      }
+    }
+
+    function showSpotifyPlayer(url) {
+      const card = document.getElementById("spotifyEmbedCard");
+      const iframe = document.getElementById("spotifyIframe");
+      let embedUrl = url;
+      if (!url.includes("/embed/")) {
+        embedUrl = url.replace("open.spotify.com/track/", "open.spotify.com/embed/track/");
+      }
+      iframe.src = embedUrl;
+      card.classList.remove("hidden");
+    }
+
+    function hideSpotifyPlayer() {
+      const card = document.getElementById("spotifyEmbedCard");
+      card.classList.add("hidden");
+    }
+
+    function changeVolume(val) {
+      currentVolume = parseInt(val, 10);
+      if (isYTReady && ytPlayer) {
+        ytPlayer.setVolume(currentVolume);
+      }
+      if (localAudioElement) {
+        localAudioElement.volume = currentVolume / 100;
+      }
+    }
+
+    function updateSongTitleDisplay() {
+      const song = CONFIG.music.playlist[currentSongIndex];
+      const ticker = document.getElementById("songTitleTicker");
+      ticker.innerHTML = `${song.title} &nbsp;&nbsp;&bull;&nbsp;&nbsp; ${song.title} &nbsp;&nbsp;&bull;&nbsp;&nbsp;`;
+    }
+
+    function updatePlayIcons(playing) {
+      const pillBtn = document.getElementById("pillPlayBtn");
+      pillBtn.innerHTML = playing 
+        ? `<i data-lucide="pause" class="w-4 h-4 fill-current"></i>`
+        : `<i data-lucide="play" class="w-4 h-4 fill-current ml-0.5"></i>`;
+
+      const headerBtn = document.getElementById("soundToggleBtn");
+      headerBtn.innerHTML = playing 
+        ? `<i data-lucide="volume-2" class="w-4 h-4 text-white"></i>`
+        : `<i data-lucide="volume-x" class="w-4 h-4 text-rose-400"></i>`;
+        
+      lucide.createIcons();
+    }
+
+    function showAutoplayFallback() {
+      document.getElementById("musicAutoplayFallback").classList.remove("hidden");
+      document.getElementById("musicAutoplayFallback").classList.add("flex");
+    }
+
+    function hideAutoplayFallback() {
+      document.getElementById("musicAutoplayFallback").classList.add("hidden");
+      document.getElementById("musicAutoplayFallback").classList.remove("flex");
+    }
+
+    /* ==========================================================================
+       TASK 1 & 2: INTERACTIVE BALLOONS CANVAS (FLOATING & CLICK-TO-POP)
+       ========================================================================== */
     let balloonCanvas, ctx, balloons = [], balloonAnimationId;
 
     function setupBalloonCanvas() {
@@ -888,6 +1723,33 @@
       ctx = balloonCanvas.getContext("2d");
       resizeBalloonCanvas();
       window.addEventListener("resize", resizeBalloonCanvas);
+
+      // Click / Tap to POP balloon!
+      balloonCanvas.addEventListener("click", (e) => {
+        const rect = balloonCanvas.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+
+        for (let i = balloons.length - 1; i >= 0; i--) {
+          const b = balloons[i];
+          const dist = Math.hypot(mouseX - b.x, mouseY - b.y);
+          if (dist <= b.radius * 1.2) {
+            // POP!
+            playPopSound();
+            if (typeof confetti === 'function') {
+              confetti({
+                particleCount: 20,
+                spread: 40,
+                origin: { x: b.x / window.innerWidth, y: b.y / window.innerHeight },
+                colors: [b.color, '#ffffff', '#fbbf24']
+              });
+            }
+            // Remove balloon
+            balloons.splice(i, 1);
+            break;
+          }
+        }
+      });
     }
 
     function resizeBalloonCanvas() {
@@ -899,14 +1761,14 @@
     function startBalloonsAnimation() {
       balloons = [];
       const colors = ['#FF4D8D', '#8B5CF6', '#F59E0B', '#3B82F6', '#10B981', '#EC4899'];
-      for (let i = 0; i < 15; i++) {
+      for (let i = 0; i < 18; i++) {
         balloons.push({
           x: Math.random() * balloonCanvas.width,
-          y: balloonCanvas.height + Math.random() * 200,
-          radius: 20 + Math.random() * 15,
+          y: balloonCanvas.height + Math.random() * 250,
+          radius: 22 + Math.random() * 16,
           color: colors[Math.floor(Math.random() * colors.length)],
-          speed: 1 + Math.random() * 2,
-          swing: Math.random() * 0.05,
+          speed: 0.8 + Math.random() * 1.8,
+          swing: Math.random() * 0.04,
           swingAngle: Math.random() * Math.PI * 2
         });
       }
@@ -921,46 +1783,168 @@
       balloons.forEach(b => {
         b.y -= b.speed;
         b.swingAngle += b.swing;
-        b.x += Math.sin(b.swingAngle) * 0.8;
+        b.x += Math.sin(b.swingAngle) * 0.7;
 
-        // Draw String
+        // String
         ctx.beginPath();
         ctx.moveTo(b.x, b.y + b.radius);
-        ctx.lineTo(b.x + Math.sin(b.swingAngle) * 5, b.y + b.radius + 30);
+        ctx.lineTo(b.x + Math.sin(b.swingAngle) * 6, b.y + b.radius + 35);
         ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
         ctx.lineWidth = 1.5;
         ctx.stroke();
 
-        // Draw Balloon Body
+        // 3D Spherical Radial Gradient Body
+        const grad = ctx.createRadialGradient(
+          b.x - b.radius * 0.3, b.y - b.radius * 0.3, b.radius * 0.1,
+          b.x, b.y, b.radius
+        );
+        grad.addColorStop(0, '#ffffff');
+        grad.addColorStop(0.3, b.color);
+        grad.addColorStop(1, '#000000');
+
         ctx.beginPath();
-        ctx.ellipse(b.x, b.y, b.radius * 0.85, b.radius, 0, 0, Math.PI * 2);
-        ctx.fillStyle = b.color;
+        ctx.ellipse(b.x, b.y, b.radius * 0.88, b.radius, 0, 0, Math.PI * 2);
+        ctx.fillStyle = grad;
         ctx.shadowColor = b.color;
-        ctx.shadowBlur = 10;
+        ctx.shadowBlur = 12;
         ctx.fill();
         ctx.shadowBlur = 0;
 
-        // Draw Highlight
-        ctx.beginPath();
-        ctx.ellipse(b.x - b.radius * 0.3, b.y - b.radius * 0.3, b.radius * 0.2, b.radius * 0.3, -Math.PI / 4, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
-        ctx.fill();
-
-        // Reset position if floats past top
-        if (b.y < -50) {
-          b.y = balloonCanvas.height + 50;
+        // Reset if float past top
+        if (b.y < -60) {
+          b.y = balloonCanvas.height + 60;
           b.x = Math.random() * balloonCanvas.width;
         }
       });
 
-      if (currentPage === 6) {
+      if (currentPage === 7) {
         balloonAnimationId = requestAnimationFrame(animateBalloons);
       }
     }
 
     /* ==========================================================================
-       WEB AUDIO SYNTHESIZER (NO EXTERNAL AUDIO FILES NEEDED)
+       TASK 1 & 2: PARALLAX BACKGROUND, SPOTLIGHT & 3D TILT CARDS
        ========================================================================== */
+    function initParallaxAndSpotlight() {
+      const spotlight = document.getElementById("cursorSpotlight");
+      const meshBg = document.getElementById("meshBg");
+      const starsBg = document.getElementById("starsBg");
+
+      window.addEventListener("mousemove", (e) => {
+        // Spotlight movement
+        spotlight.style.left = `${e.clientX}px`;
+        spotlight.style.top = `${e.clientY}px`;
+
+        // 3D Parallax shift
+        const moveX = (e.clientX - window.innerWidth / 2) * 0.03;
+        const moveY = (e.clientY - window.innerHeight / 2) * 0.03;
+
+        meshBg.style.transform = `translate3d(${moveX * 0.5}px, ${moveY * 0.5}px, 0)`;
+        starsBg.style.transform = `translate3d(${moveX * 1.2}px, ${moveY * 1.2}px, 0)`;
+      });
+
+      // Mobile Device Orientation Parallax Tilt
+      if (window.DeviceOrientationEvent) {
+        window.addEventListener("deviceorientation", (e) => {
+          if (e.gamma !== null && e.beta !== null) {
+            const tiltX = e.gamma * 0.5; // left-to-right tilt
+            const tiltY = e.beta * 0.5;  // front-to-back tilt
+            meshBg.style.transform = `translate3d(${tiltX}px, ${tiltY}px, 0)`;
+            starsBg.style.transform = `translate3d(${tiltX * 2}px, ${tiltY * 2}px, 0)`;
+          }
+        });
+      }
+    }
+
+    function init3DTiltCards() {
+      document.addEventListener("mousemove", (e) => {
+        const cards = document.querySelectorAll(".tilt-card-3d");
+        cards.forEach(card => {
+          const rect = card.getBoundingClientRect();
+          if (
+            e.clientX >= rect.left && e.clientX <= rect.right &&
+            e.clientY >= rect.top && e.clientY <= rect.bottom
+          ) {
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const rotateX = -((y - centerY) / centerY) * 10;
+            const rotateY = ((x - centerX) / centerX) * 10;
+
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+          } else {
+            if (!card.classList.contains("polaroid-card-wrapper")) {
+              card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+            }
+          }
+        });
+      });
+    }
+
+    function initMagneticButtons() {
+      const magneticBtns = document.querySelectorAll(".magnetic-btn");
+      magneticBtns.forEach(btn => {
+        btn.addEventListener("mousemove", (e) => {
+          const rect = btn.getBoundingClientRect();
+          const x = e.clientX - (rect.left + rect.width / 2);
+          const y = e.clientY - (rect.top + rect.height / 2);
+          btn.style.transform = `translate3d(${x * 0.25}px, ${y * 0.25}px, 0) scale(1.04)`;
+        });
+        btn.addEventListener("mouseleave", () => {
+          btn.style.transform = `translate3d(0, 0, 0) scale(1)`;
+        });
+      });
+    }
+
+    function initClickSparkles() {
+      window.addEventListener("click", (e) => {
+        const container = document.getElementById("sparkleContainer");
+        for (let i = 0; i < 4; i++) {
+          const sparkle = document.createElement("div");
+          sparkle.className = "click-sparkle";
+          const offsetX = (Math.random() - 0.5) * 30;
+          const offsetY = (Math.random() - 0.5) * 30;
+          sparkle.style.left = `${e.clientX + offsetX}px`;
+          sparkle.style.top = `${e.clientY + offsetY}px`;
+          container.appendChild(sparkle);
+
+          setTimeout(() => {
+            sparkle.remove();
+          }, 600);
+        }
+      });
+    }
+
+    /* ==========================================================================
+       CELEBRATION: CANVAS CONFETTI & SOUND SYNTHESIZER
+       ========================================================================== */
+    function triggerConfetti() {
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 90,
+          spread: 80,
+          origin: { y: 0.6 }
+        });
+        setTimeout(() => {
+          confetti({ particleCount: 60, angle: 60, spread: 60, origin: { x: 0 } });
+          confetti({ particleCount: 60, angle: 120, spread: 60, origin: { x: 1 } });
+        }, 250);
+      }
+    }
+
+    function triggerMiniConfetti() {
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 35,
+          spread: 55,
+          origin: { y: 0.7 },
+          colors: ['#FF4D8D', '#8B5CF6', '#F59E0B']
+        });
+      }
+    }
+
     function getAudioContext() {
       if (!audioContext) {
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -971,24 +1955,15 @@
       return audioContext;
     }
 
-    function toggleSound() {
-      isMuted = !isMuted;
-      const btn = document.getElementById("soundToggleBtn");
-      btn.innerHTML = isMuted 
-        ? `<i data-lucide="volume-x" class="w-4 h-4 text-rose-400"></i>`
-        : `<i data-lucide="volume-2" class="w-4 h-4 text-white"></i>`;
-      lucide.createIcons();
-    }
-
     function playClickSound() {
-      if (isMuted || !CONFIG.enableAudio) return;
+      if (isMuted || !CONFIG.music.enableAudio) return;
       try {
         const ctx = getAudioContext();
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = 'sine';
         osc.frequency.setValueAtTime(600, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(800, ctx.currentTime + 0.04);
+        osc.frequency.exponentialRampToValueAtTime(850, ctx.currentTime + 0.04);
         gain.gain.setValueAtTime(0.03, ctx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
         osc.connect(gain);
@@ -999,14 +1974,14 @@
     }
 
     function playPopSound() {
-      if (isMuted || !CONFIG.enableAudio) return;
+      if (isMuted || !CONFIG.music.enableAudio) return;
       try {
         const ctx = getAudioContext();
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = 'triangle';
-        osc.frequency.setValueAtTime(200, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(700, ctx.currentTime + 0.12);
+        osc.frequency.setValueAtTime(220, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(750, ctx.currentTime + 0.12);
         gain.gain.setValueAtTime(0.15, ctx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
         osc.connect(gain);
@@ -1017,7 +1992,7 @@
     }
 
     function playChimeSound() {
-      if (isMuted || !CONFIG.enableAudio) return;
+      if (isMuted || !CONFIG.music.enableAudio) return;
       try {
         const ctx = getAudioContext();
         const freqs = [523.25, 659.25, 783.99]; // C5, E5, G5 major triad
@@ -1037,10 +2012,9 @@
     }
 
     function playBlowSound() {
-      if (isMuted || !CONFIG.enableAudio) return;
+      if (isMuted || !CONFIG.music.enableAudio) return;
       try {
         const ctx = getAudioContext();
-        // White noise simulation for blowing wind
         const bufferSize = ctx.sampleRate * 0.4;
         const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
         const data = buffer.getChannelData(0);
@@ -1084,7 +2058,6 @@
       applyConfigToDOM();
       closePersonalizeModal();
 
-      // Reset to page 1 to see changes
       goToPage(1);
     }
   </script>
