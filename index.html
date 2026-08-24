@@ -54,7 +54,7 @@
             'spin-slow': 'spin 14s linear infinite',
             'squish-bounce': 'squishBounce 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) infinite',
             'flicker': 'flicker 1.5s ease-in-out infinite alternate',
-            'head-shake': 'headShake 0.5s ease-in-out',
+            'ken-burns': 'kenBurns 25s ease-in-out infinite alternate',
           },
           keyframes: {
             clayFloat: {
@@ -69,13 +69,10 @@
               '0%': { opacity: '0.85', transform: 'scale(0.96) rotate(-1deg)' },
               '100%': { opacity: '1', transform: 'scale(1.08) rotate(1deg)' },
             },
-            headShake: {
-              '0%': { transform: 'translateX(0)' },
-              '20%': { transform: 'translateX(-8px) rotate(-3deg)' },
-              '40%': { transform: 'translateX(8px) rotate(3deg)' },
-              '60%': { transform: 'translateX(-5px) rotate(-1.5deg)' },
-              '80%': { transform: 'translateX(5px) rotate(1.5deg)' },
-              '100%': { transform: 'translateX(0)' },
+            kenBurns: {
+              '0%': { transform: 'scale(1) translate(0, 0)' },
+              '50%': { transform: 'scale(1.12) translate(-2%, -2%)' },
+              '100%': { transform: 'scale(1) translate(0, 0)' },
             }
           }
         }
@@ -545,7 +542,7 @@
 
     /* Reduced Motion Respect */
     @media (prefers-reduced-motion: reduce) {
-      .animate-float, .animate-float-slow, .animate-squish-bounce, .ticker-move {
+      .animate-float, .animate-float-slow, .animate-squish-bounce, .animate-ken-burns, .ticker-move {
         animation: none !important;
       }
     }
@@ -787,62 +784,121 @@
         </div>
 
         <button onclick="goToPage(6)" class="clay-btn px-8 py-3.5 text-base flex items-center space-x-2 mx-auto mt-2">
-          <span>Take the Fun Quiz 🌸</span>
-          <i data-lucide="help-circle" class="w-4 h-4"></i>
+          <span>The Night You Were Born ✨</span>
+          <i data-lucide="sparkles" class="w-4 h-4"></i>
         </button>
 
       </div>
     </section>
 
-    <!-- ================= SCENE 6: FUN QUIZ (REPLACES SCRATCH & WIN) ================= -->
+    <!-- ================= SCENE 6: THE NIGHT YOU WERE BORN (NASA EDITION) ================= -->
     <section id="page6" class="page-scene w-full">
-      <div class="clay-panel w-full p-6 sm:p-8 text-center space-y-5 relative overflow-hidden">
+      <div class="clay-panel w-full p-5 sm:p-8 text-center space-y-5 relative overflow-hidden">
         
+        <!-- Deep Space NASA Background Overlay with Soft Pastel Duotone & Ken Burns Zoom -->
+        <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none rounded-[2.25rem]">
+          <div class="absolute inset-0 bg-gradient-to-b from-purple-950/60 via-purple-900/50 to-pink-950/60 z-10 backdrop-blur-[1px]"></div>
+          <img src="assets/nasa/carina.jpg" alt="NASA Space" loading="lazy" class="w-full h-full object-cover opacity-35 scale-105 animate-ken-burns" onerror="this.src='https://images-assets.nasa.gov/image/PIA25433/PIA25433~medium.jpg';">
+        </div>
+
+        <!-- Header Badge & Title -->
         <div class="space-y-1 z-10 relative">
-          <div class="inline-flex items-center space-x-2 clay-badge px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-pink-600">
-            <i data-lucide="help-circle" class="w-3.5 h-3.5 text-pink-500"></i>
-            <span id="quizProgressBadge">Question 1 of 4</span>
+          <div class="inline-flex items-center space-x-2 clay-badge px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-pink-600 bg-white/90">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-pink-500 animate-spin"></i>
+            <span>25 • 08 • 2007 Starscape</span>
           </div>
           <h2 class="text-2xl sm:text-4xl font-black text-purple-900 font-heading leading-tight pt-1">
-            How well does the universe know Janani? 🌸
+            The Night You Were Born ✨
           </h2>
-          <p class="text-xs sm:text-sm text-pastel-textMuted font-medium max-w-md mx-auto">
-            Answer the questions to unlock the birthday cake!
+          <p class="text-xs sm:text-sm text-purple-800 font-medium max-w-md mx-auto">
+            On 25 • 08 • 2007, the universe quietly placed its brightest star: <strong class="text-pink-600 font-bold">Janani</strong>.
           </p>
         </div>
 
-        <!-- Quiz Question & Answers Container -->
-        <div id="quizQuestionCard" class="clay-card p-5 sm:p-8 max-w-lg mx-auto space-y-5 text-left relative z-10 transition-all duration-300">
-          <h3 id="quizQuestionText" class="text-base sm:text-xl font-extrabold text-purple-950 font-heading leading-snug">
-            Loading Question...
-          </h3>
-
-          <div id="quizOptionsContainer" class="space-y-2.5">
-            <!-- Rendered dynamically -->
+        <!-- NASA Space Postcards (Polaroid Style with Washi Tape) -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 py-1 z-10 relative">
+          
+          <!-- Postcard 1: Carina Nebula -->
+          <div class="clay-card p-3 bg-white/95 text-left space-y-2 relative tilt-card-3d border-2 border-white shadow-lg">
+            <div class="washi-tape"></div>
+            <div class="w-full h-28 sm:h-32 rounded-xl overflow-hidden relative shadow-inner">
+              <img src="assets/nasa/carina.jpg" alt="Carina Nebula" loading="lazy" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" onerror="this.src='https://images-assets.nasa.gov/image/PIA25433/PIA25433~medium.jpg';">
+              <span class="absolute bottom-1 right-1.5 bg-black/60 backdrop-blur-md text-[9px] text-white px-2 py-0.5 rounded-full font-bold">Webb NIRCam</span>
+            </div>
+            <p class="text-[11px] sm:text-xs text-purple-900 font-semibold leading-tight">
+              "The Carina Nebula — a place where baby stars are born. Just like you. 🌟"
+            </p>
           </div>
 
-          <div id="quizFeedbackMessage" class="text-center font-bold text-xs sm:text-sm min-h-[20px] transition-all"></div>
+          <!-- Postcard 2: Pillars of Creation -->
+          <div class="clay-card p-3 bg-white/95 text-left space-y-2 relative tilt-card-3d border-2 border-white shadow-lg">
+            <div class="washi-tape"></div>
+            <div class="w-full h-28 sm:h-32 rounded-xl overflow-hidden relative shadow-inner">
+              <img src="assets/nasa/pillars.jpg" alt="Pillars of Creation" loading="lazy" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" onerror="this.src='https://images-assets.nasa.gov/image/PIA25585/PIA25585~medium.jpg';">
+              <span class="absolute bottom-1 right-1.5 bg-black/60 backdrop-blur-md text-[9px] text-white px-2 py-0.5 rounded-full font-bold">Webb / Hubble</span>
+            </div>
+            <p class="text-[11px] sm:text-xs text-purple-900 font-semibold leading-tight">
+              "The Pillars of Creation — even the universe builds beautiful things slowly."
+            </p>
+          </div>
+
+          <!-- Postcard 3: Hubble Deep Field -->
+          <div class="clay-card p-3 bg-white/95 text-left space-y-2 relative tilt-card-3d border-2 border-white shadow-lg">
+            <div class="washi-tape"></div>
+            <div class="w-full h-28 sm:h-32 rounded-xl overflow-hidden relative shadow-inner">
+              <img src="assets/nasa/deepfield.jpg" alt="Hubble Deep Field" loading="lazy" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" onerror="this.src='https://images-assets.nasa.gov/image/PIA12348/PIA12348~medium.jpg';">
+              <span class="absolute bottom-1 right-1.5 bg-black/60 backdrop-blur-md text-[9px] text-white px-2 py-0.5 rounded-full font-bold">Hubble Legacy</span>
+            </div>
+            <p class="text-[11px] sm:text-xs text-purple-900 font-semibold leading-tight">
+              "The Hubble Deep Field — thousands of galaxies, and you still shine brightest."
+            </p>
+          </div>
+
         </div>
 
-        <!-- 3D Reward Chest Modal (Unlocked after last question) -->
-        <div id="quizRewardChest" class="hidden flex-col items-center justify-center space-y-4 p-6 sm:p-8 clay-card max-w-lg mx-auto text-center animate-squish-bounce z-10 relative">
-          <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-gradient-to-br from-yellow-300 via-pink-400 to-purple-500 p-1 flex items-center justify-center shadow-xl border-4 border-white animate-float">
-            <div class="w-full h-full bg-white/90 rounded-2xl flex items-center justify-center text-4xl sm:text-5xl drop-shadow">
-              🎂
+        <!-- Interactive Constellation Canvas & Wish Display Area -->
+        <div class="clay-card p-4 sm:p-5 max-w-lg mx-auto space-y-3 z-10 relative bg-white/95 border-2 border-white">
+          <div class="flex items-center justify-between text-xs font-bold text-purple-800 border-b border-purple-100 pb-2">
+            <span class="flex items-center space-x-1"><i data-lucide="star" class="w-4 h-4 text-amber-400 fill-amber-400"></i> Interactive Star Map</span>
+            <span id="starTapInstruction" class="text-pink-600 animate-pulse">Tap the glowing center star ✨</span>
+          </div>
+
+          <!-- Star Map Container with SVG Constellation -->
+          <div class="relative w-full h-44 sm:h-48 bg-purple-950/80 rounded-2xl overflow-hidden border border-purple-300 shadow-inner flex items-center justify-center">
+            <!-- SVG Constellation Lines -->
+            <svg id="constellationSvg" class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 300 180">
+              <path id="heartPath" d="M150 70 C130 40, 90 60, 110 95 L150 140 L190 95 C210 60, 170 40, 150 70 Z" fill="none" stroke="rgba(244, 63, 94, 0.8)" stroke-width="2.5" stroke-dasharray="400" stroke-dashoffset="400" class="transition-all duration-1000" />
+            </svg>
+
+            <!-- Tappable Stars -->
+            <div id="starsContainer" class="absolute inset-0">
+              <!-- Rendered in JS -->
             </div>
+
+            <!-- Center Bright "Her Star" -->
+            <button id="herStarBtn" onclick="triggerHerStar()" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-gradient-to-r from-pink-400 via-rose-400 to-amber-300 flex items-center justify-center shadow-lg shadow-pink-500/50 hover:scale-125 active:scale-95 transition-all duration-300 animate-pulse touch-manipulation z-20">
+              <i data-lucide="star" class="w-6 h-6 text-white fill-white"></i>
+            </button>
           </div>
 
-          <div class="space-y-1.5">
-            <span class="clay-badge px-4 py-1 text-xs font-black uppercase tracking-widest text-pink-600">QUIZ COMPLETED!</span>
-            <h3 class="text-2xl sm:text-3xl font-black text-purple-950 font-heading">You Unlocked the Cake! 🎂</h3>
-            <p class="text-xs sm:text-sm text-purple-800 font-medium">You know Janani so well! Now it's time to make a birthday wish.</p>
+          <!-- Dynamic Wish / Fun Fact Display -->
+          <div id="starWishTextDisplay" class="text-xs sm:text-sm font-medium text-purple-900 min-h-[36px] flex items-center justify-center text-center px-2 py-1 bg-purple-50 rounded-xl border border-purple-100">
+            "The light from these stars traveled thousands of years to be here with you today."
           </div>
+        </div>
 
-          <button onclick="goToPage(7)" class="clay-btn px-8 py-3.5 text-base sm:text-lg flex items-center space-x-3 mx-auto">
+        <!-- Continue Button (Revealed when Her Star is tapped) -->
+        <div id="constellationContinueContainer" class="hidden justify-center pt-1 z-10 relative">
+          <button onclick="goToPage(7)" class="clay-btn px-8 py-3.5 text-base sm:text-lg flex items-center space-x-3 mx-auto animate-squish-bounce">
             <span>Continue to Cake 🎂</span>
             <i data-lucide="arrow-right" class="w-5 h-5"></i>
           </button>
         </div>
+
+        <!-- NASA Public Domain Credit Line -->
+        <p class="text-[10px] sm:text-xs text-purple-700/80 font-semibold z-10 relative pt-1">
+          ✨ Real imagery: NASA / ESA / CSA — Hubble & James Webb (public domain)
+        </p>
 
       </div>
     </section>
@@ -998,7 +1054,7 @@
     <div class="flex-1 overflow-hidden text-xs text-purple-900 font-bold">
       <div class="ticker-wrap">
         <div id="songTitleTicker" class="ticker-move">
-          City of Stars – La La Land &nbsp;&nbsp;&bull;&nbsp;&nbsp; City of Stars – La La Land &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+          Kannazhaga – 3 &nbsp;&nbsp;&bull;&nbsp;&nbsp; Kannazhaga – 3 &nbsp;&nbsp;&bull;&nbsp;&nbsp;
         </div>
       </div>
     </div>
@@ -1122,40 +1178,25 @@
           note: "May your day be filled with endless smiles and happiness like this!"
         }
       ],
-      quizQuestions: [
-        { 
-          q: "What's Janani's favorite way to relax?", 
-          options: ["Listening to music 🎵", "Binging shows 📺", "Sleeping 😴"], 
-          answer: 0 
-        },
-        { 
-          q: "Janani's superpower would be?", 
-          options: ["Spreading instant happiness ✨", "Reading minds 🧠", "Time travel ⏳"], 
-          answer: 0 
-        },
-        { 
-          q: "What makes Janani laugh the hardest?", 
-          options: ["Silly memes 😂", "Inside jokes 🤫", "Funny pets 🐱"], 
-          answer: 1 
-        },
-        { 
-          q: "Which word best describes Janani?", 
-          options: ["Pure Sunshine ☀️", "Kind Heart 💖", "All of the above! 🌟"], 
-          answer: 2 
-        }
+      starWishes: [
+        "May your days be filled with endless warmth and laughter! ✨",
+        "May every single dream of yours take flight and shine bright! 🌟",
+        "May you always be surrounded by love, peace, and pure joy! 💖",
+        "May this new year bring you magic in every little moment! 💫",
+        "You are truly one of a kind. Never stop being amazing! 🚀"
       ],
-      secretMessage: "💖 Secret Unlocked: You are loved more than 3000! Thank you for being so wonderful! ✨",
       wishMessage: "✨ May all your biggest dreams and quietest wishes come true this year! ✨",
       finalWishMessage: "Wishing you a year filled with endless adventures, unforgettable memories, pure happiness, and all the love in the universe. Keep shining bright! 🚀✨",
+      secretMessage: "💖 Secret Unlocked: You are loved more than 3000! Thank you for being so wonderful! ✨",
       easterEggMessage: "💖 Secret Unlocked: You are loved more than 3000! Thank you for being so wonderful! ✨",
       music: {
         enableAudio: true,
         autoplayOnStart: true,
         localFallbackUrl: "assets/music/birthday.mp3",
         playlist: [
+          { title: "Kannazhaga – 3",                       type: "youtube", url: "https://youtu.be/br40KCv6Gf0?si=kHvMfRUtDdsJfeS0" },
           { title: "City of Stars – La La Land",           type: "youtube", url: "https://youtu.be/q9TQFZJ2biM?si=c4-VZvZo1SA5Cumm" },
-          { title: "Mia & Sebastian's Theme – La La Land", type: "youtube", url: "https://youtu.be/srXDMzK_GZc?si=rNxJCSOkJJr1nAdC" },
-          { title: "Kannazhaga – 3",                       type: "youtube", url: "https://youtu.be/br40KCv6Gf0?si=kHvMfRUtDdsJfeS0" }
+          { title: "Mia & Sebastian's Theme – La La Land", type: "youtube", url: "https://youtu.be/srXDMzK_GZc?si=rNxJCSOkJJr1nAdC" }
         ]
       }
     };
@@ -1169,8 +1210,9 @@
     let typingTimer = null;
     let typingFinished = false;
 
-    // Quiz State
-    let currentQuizIndex = 0;
+    // Constellation State
+    let starWishIndex = 0;
+    let herStarActivated = false;
 
     // Mobile / Device Detection for Performance Throttling
     const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 640;
@@ -1218,7 +1260,7 @@
       applyConfigToDOM();
       renderAppreciationCards();
       renderPolaroidBoard();
-      renderFunQuiz();
+      setupStarMap();
       setupStepperDots();
       setupSprinkleCanvas();
       setupBalloonCanvas();
@@ -1312,83 +1354,79 @@
       wrapper.classList.toggle('flipped');
     }
 
-    /* RENDER NEW FUN QUIZ SCENE (SCENE 6) */
-    function renderFunQuiz() {
-      currentQuizIndex = 0;
-      showQuizQuestion();
+    /* RENDER SCENE 6: THE NIGHT YOU WERE BORN (NASA STAR MAP) */
+    function setupStarMap() {
+      const container = document.getElementById("starsContainer");
+      if (!container) return;
+      container.innerHTML = "";
+
+      const starPositions = [
+        { top: "20%", left: "15%" },
+        { top: "25%", left: "80%" },
+        { top: "75%", left: "20%" },
+        { top: "70%", left: "75%" },
+        { top: "40%", left: "30%" },
+        { top: "40%", left: "70%" },
+        { top: "15%", left: "50%" },
+      ];
+
+      starPositions.forEach((pos, idx) => {
+        const starBtn = document.createElement("button");
+        starBtn.className = "absolute w-8 h-8 rounded-full flex items-center justify-center text-amber-300 hover:scale-125 active:scale-95 transition-transform touch-manipulation z-10";
+        starBtn.style.top = pos.top;
+        starBtn.style.left = pos.left;
+        starBtn.innerHTML = `<i data-lucide="star" class="w-4 h-4 fill-current drop-shadow"></i>`;
+        starBtn.onclick = () => handleStarTap(idx, starBtn);
+        container.appendChild(starBtn);
+      });
+
+      lucide.createIcons();
     }
 
-    function showQuizQuestion() {
-      const quizCard = document.getElementById("quizQuestionCard");
-      const rewardChest = document.getElementById("quizRewardChest");
-      const progressBadge = document.getElementById("quizProgressBadge");
-      const feedbackMsg = document.getElementById("quizFeedbackMessage");
+    function handleStarTap(index, starEl) {
+      playChimeSound();
+      triggerMiniConfetti();
 
-      if (!CONFIG.quizQuestions || CONFIG.quizQuestions.length === 0) return;
+      starEl.classList.add("text-pink-400", "scale-125");
 
-      if (currentQuizIndex >= CONFIG.quizQuestions.length) {
-        quizCard.classList.add("hidden");
-        rewardChest.classList.remove("hidden");
-        rewardChest.classList.add("flex");
-        triggerConfetti();
-        playChimeSound();
+      const wishes = CONFIG.starWishes || [
+        "May your days be filled with endless warmth and laughter! ✨",
+        "May every single dream of yours take flight and shine bright! 🌟",
+        "May you always be surrounded by love, peace, and pure joy! 💖",
+        "May this new year bring you magic in every little moment! 💫"
+      ];
+
+      const display = document.getElementById("starWishTextDisplay");
+      display.innerText = wishes[starWishIndex % wishes.length];
+      starWishIndex++;
+    }
+
+    function triggerHerStar() {
+      if (herStarActivated) {
+        goToPage(7);
         return;
       }
 
-      quizCard.classList.remove("hidden");
-      rewardChest.classList.add("hidden");
-      rewardChest.classList.remove("flex");
-      feedbackMsg.innerText = "";
-      feedbackMsg.className = "text-center font-bold text-xs sm:text-sm min-h-[20px] transition-all";
+      herStarActivated = true;
+      playPopSound();
+      playChimeSound();
+      triggerConfetti();
 
-      const qData = CONFIG.quizQuestions[currentQuizIndex];
-      progressBadge.innerText = `Question ${currentQuizIndex + 1} of ${CONFIG.quizQuestions.length}`;
-      document.getElementById("quizQuestionText").innerText = qData.q;
+      const display = document.getElementById("starWishTextDisplay");
+      display.innerText = "✨ Janani's Star Shines Brightest! Constellation Complete! ✨";
+      display.className = "text-xs sm:text-sm font-bold text-pink-600 min-h-[36px] flex items-center justify-center text-center px-2 py-1 bg-pink-50 rounded-xl border border-pink-200 animate-bounce";
 
-      const optionsContainer = document.getElementById("quizOptionsContainer");
-      optionsContainer.innerHTML = "";
+      document.getElementById("starTapInstruction").innerText = "Constellation Completed! ❤️";
 
-      qData.options.forEach((optText, optIdx) => {
-        const btn = document.createElement("button");
-        btn.className = "w-full clay-btn clay-btn-secondary p-3.5 sm:p-4 text-left font-bold text-xs sm:text-sm text-purple-900 rounded-2xl flex items-center justify-between hover:scale-[1.02] active:scale-[0.98] transition-transform shadow-md border-2 border-white/80 touch-manipulation";
-        btn.innerHTML = `
-          <span>${optText}</span>
-          <div class="w-6 h-6 rounded-full border-2 border-purple-300 flex items-center justify-center text-xs font-black text-purple-500 shrink-0 ml-2">
-            ${String.fromCharCode(65 + optIdx)}
-          </div>
-        `;
-        btn.onclick = () => handleQuizAnswer(optIdx, qData.answer, btn);
-        optionsContainer.appendChild(btn);
-      });
-    }
+      const heartPath = document.getElementById("heartPath");
+      if (heartPath) {
+        heartPath.style.strokeDashoffset = "0";
+      }
 
-    function handleQuizAnswer(selectedIdx, correctIdx, btnEl) {
-      const feedbackMsg = document.getElementById("quizFeedbackMessage");
-
-      if (selectedIdx === correctIdx) {
-        playPopSound();
-        triggerMiniConfetti();
-        btnEl.classList.remove("clay-btn-secondary");
-        btnEl.classList.add("bg-gradient-to-r", "from-emerald-400", "to-teal-500", "text-white", "border-emerald-200");
-        feedbackMsg.innerText = "Nailed it! 🎉";
-        feedbackMsg.className = "text-center font-bold text-xs sm:text-sm text-emerald-600 min-h-[20px] animate-bounce";
-
-        const btns = document.querySelectorAll("#quizOptionsContainer button");
-        btns.forEach(b => b.disabled = true);
-
-        setTimeout(() => {
-          currentQuizIndex++;
-          showQuizQuestion();
-        }, 1100);
-      } else {
-        playClickSound();
-        btnEl.classList.add("animate-head-shake", "border-pink-400");
-        feedbackMsg.innerText = "Try again 💗";
-        feedbackMsg.className = "text-center font-bold text-xs sm:text-sm text-pink-600 min-h-[20px]";
-
-        setTimeout(() => {
-          btnEl.classList.remove("animate-head-shake", "border-pink-400");
-        }, 600);
+      const continueContainer = document.getElementById("constellationContinueContainer");
+      if (continueContainer) {
+        continueContainer.classList.remove("hidden");
+        continueContainer.classList.add("flex");
       }
     }
 
@@ -1443,7 +1481,7 @@
         if (currentPage === 3) {
           startTypingMessage();
         } else if (currentPage === 6) {
-          renderFunQuiz();
+          setupStarMap();
         } else if (currentPage === 8) {
           triggerConfetti();
           startBalloonsAnimation();
@@ -1683,7 +1721,7 @@
       modal.classList.remove("flex");
     }
 
-    /* MUSIC STREAMING ENGINE (LAZY LOADED YOUTUBE & SPOTIFY) */
+    /* MUSIC STREAMING ENGINE (KANNAZHAGA MAIN SONG) */
     let ytScriptLoaded = false;
     function lazyLoadYouTubeAPI() {
       if (ytScriptLoaded) return;
@@ -1702,7 +1740,7 @@
 
     function onYouTubeIframeAPIReady() {
       const initialSong = CONFIG.music.playlist[0];
-      const initialVidId = extractYouTubeId(initialSong.url) || "q9TQFZJ2biM";
+      const initialVidId = extractYouTubeId(initialSong.url) || "br40KCv6Gf0";
 
       ytPlayer = new YT.Player('ytPlayer', {
         height: '100',
@@ -2076,7 +2114,7 @@
 
     /* 3D TILT & PARALLAX */
     function init3DTilt() {
-      if (isMobileDevice) return; // Touch devices use CSS hover/active micro-animations
+      if (isMobileDevice) return;
 
       document.addEventListener("mousemove", (e) => {
         const cards = document.querySelectorAll(".tilt-card-3d");
