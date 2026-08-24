@@ -102,8 +102,6 @@
       align-items: center;
       padding-top: env(safe-area-inset-top);
       padding-bottom: env(safe-area-inset-bottom);
-      touch-action: manipulation;
-      overscroll-behavior: none;
     }
 
     /* Floating Sprinkle Confetti Background Overlay */
@@ -280,17 +278,6 @@
       cursor: pointer;
       position: relative;
       touch-action: manipulation;
-    }
-
-    /* enlarge touch hit area while keeping visual small */
-    .gift-3d-scene::after {
-      content: '';
-      position: absolute;
-      left: 50%; top: 50%;
-      transform: translate(-50%, -50%);
-      width: 88px; height: 88px; border-radius: 50%;
-      pointer-events: auto;
-      background: transparent;
     }
     .gift-3d-cube {
       width: 100%;
@@ -559,18 +546,6 @@
         animation: none !important;
       }
     }
-
-    /* Mobile portrait adjustments */
-    @media (max-width: 560px) {
-      #finalPersonName { display: inline-block; margin-left: 6%; text-align: left; max-width: 78%; }
-      .clay-badge { min-height: 44px; }
-      /* reduce cinema bars (if present) */
-      .cinema-bars { height: 12vh; }
-    }
-
-    /* Music pill safe-area offsets */
-    #musicPlayerPill { bottom: calc(1rem + env(safe-area-inset-bottom)); right: calc(1rem + env(safe-area-inset-right)); }
-    #musicAutoplayFallback { bottom: calc(4rem + env(safe-area-inset-bottom)); right: calc(1rem + env(safe-area-inset-right)); }
   </style>
 </head>
 <body class="h-full min-h-[100dvh] flex flex-col justify-between items-center relative select-none">
@@ -623,7 +598,7 @@
             <h2 class="text-xs sm:text-sm font-black tracking-[0.25em] text-purple-700 uppercase">
               HAPPY BIRTHDAY TO YOU
             </h2>
-            <h1 id="landingName" class="font-script text-6xl sm:text-7xl md:text-8xl text-[#FF5B85] drop-shadow-sm font-bold leading-none transform -rotate-2 py-1">
+            <h1 class="font-script text-6xl sm:text-7xl md:text-8xl text-[#FF5B85] drop-shadow-sm font-bold leading-none transform -rotate-2 py-1">
               Janani
             </h1>
           </div>
@@ -1164,42 +1139,66 @@
   <!-- JAVASCRIPT LOGIC -->
   <script>
     /* ==========================================================================
-       PRIMARY CONFIGURATION OBJECT (Personalization + Music)
-       - All hard-coded strings in the film are sourced from this block.
+       PRIMARY CONFIGURATION OBJECT
        ========================================================================== */
     const CONFIG = {
       name: "Janani",
       dob: "25.08.2007",
-      eyebrow: "a little something, for Janani",
-      wishScript: "Janani",
-      wishSub: "here's to a year that blooms",
-      dateLine: "25 • 08 • 2007",
-      nightLine: "On 25 • 08 • 2007, the sky kept a star for us.",
-      typingMessage: "Today is not just another day...\nIt is the day someone truly extraordinary was born.\nAnd this little website was made just for you. 💖",
-      captions: ["Sweetest Memories 💖","Unforgettable Smile ✨"],
+      birthdayPersonName: "Janani",
       yourName: "Dhanush",
-      musicAutoplay: true,
-      playlist: [
-        { title: "Kannazhaga – 3", type: "youtube", url: "https://youtu.be/ZBOijdR1wPE?si=gSWoIwKYt_tQwDR2" },
-        { title: "City of Stars – La La Land", type: "youtube", url: "https://youtu.be/srXDMzK_GZc?si=-MwX15I7PU1Pk7OB" },
-        { title: "Mia & Sebastian's Theme", type: "spotify", url: "https://open.spotify.com/track/1Vk4yRsz0iBzDiZEoFMQyv" }
-      ],
-
-      // Retain existing visual cards & photos (can be edited via personalization UI)
+      typingMessage: "Today is not just another day...\nIt is the day someone truly extraordinary was born.\nAnd this little website was made just for you. 💖",
       cards: [
-        { emoji: "✨", title: "Radiant Smile", text: "Your smile can make an ordinary day feel brighter and full of warmth." },
-        { emoji: "🛡️", title: "Kind Heart", text: "You have a heart that makes people around you feel safe, loved, and valued." },
-        { emoji: "🌟", title: "Endless Happiness", text: "You deserve all the joy, laughter, and magical moments coming your way." }
+        {
+          emoji: "✨",
+          title: "Radiant Smile",
+          text: "Your smile can make an ordinary day feel brighter and full of warmth."
+        },
+        {
+          emoji: "🛡️",
+          title: "Kind Heart",
+          text: "You have a heart that makes people around you feel safe, loved, and valued."
+        },
+        {
+          emoji: "🌟",
+          title: "Endless Happiness",
+          text: "You deserve all the joy, laughter, and magical moments coming your way."
+        }
       ],
       photos: [
-        { url: "assets/photos/photo1.jpg", caption: "Sweetest Memories 💖", date: "Special Moment #1", note: "Every picture holds a memory, but this one reminds me how special you are!" },
-        { url: "assets/photos/photo2.jpg", caption: "Unforgettable Smile ✨", date: "Special Moment #2", note: "May your day be filled with endless smiles and happiness like this!" }
+        {
+          url: "assets/photos/photo1.jpg",
+          caption: "Sweetest Memories 💖",
+          date: "Special Moment #1",
+          note: "Every picture holds a memory, but this one reminds me how special you are!"
+        },
+        {
+          url: "assets/photos/photo2.jpg",
+          caption: "Unforgettable Smile ✨",
+          date: "Special Moment #2",
+          note: "May your day be filled with endless smiles and happiness like this!"
+        }
       ],
-
-      // small misc messages used elsewhere
+      starWishes: [
+        "May your days be filled with endless warmth and laughter! ✨",
+        "May every single dream of yours take flight and shine bright! 🌟",
+        "May you always be surrounded by love, peace, and pure joy! 💖",
+        "May this new year bring you magic in every little moment! 💫",
+        "You are truly one of a kind. Never stop being amazing! 🚀"
+      ],
       wishMessage: "✨ May all your biggest dreams and quietest wishes come true this year! ✨",
-      finalWishMessage: "Wishing you a year filled with endless adventures, unforgettable memories, pure happiness, and all the love in the universe. Keep shining bright!",
-      easterEggMessage: "💖 Secret Unlocked: You are loved more than 3000! Thank you for being so wonderful! ✨"
+      finalWishMessage: "Wishing you a year filled with endless adventures, unforgettable memories, pure happiness, and all the love in the universe. Keep shining bright! 🚀✨",
+      secretMessage: "💖 Secret Unlocked: You are loved more than 3000! Thank you for being so wonderful! ✨",
+      easterEggMessage: "💖 Secret Unlocked: You are loved more than 3000! Thank you for being so wonderful! ✨",
+      music: {
+        enableAudio: true,
+        autoplayOnStart: true,
+        localFallbackUrl: "assets/music/birthday.mp3",
+        playlist: [
+          { title: "Kannazhaga – 3",                       type: "youtube", url: "https://youtu.be/br40KCv6Gf0?si=kHvMfRUtDdsJfeS0" },
+          { title: "City of Stars – La La Land",           type: "youtube", url: "https://youtu.be/q9TQFZJ2biM?si=c4-VZvZo1SA5Cumm" },
+          { title: "Mia & Sebastian's Theme – La La Land", type: "youtube", url: "https://youtu.be/srXDMzK_GZc?si=rNxJCSOkJJr1nAdC" }
+        ]
+      }
     };
 
     /* GLOBAL STATE */
@@ -1218,9 +1217,6 @@
     // Mobile / Device Detection for Performance Throttling
     const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 640;
 
-    // DPR cap: 2 on desktop, 1.75 on phones
-    const DPR_CAP = (isMobileDevice ? 1.75 : 2);
-
     // Music State
     let currentSongIndex = 0;
     let ytPlayer = null;
@@ -1229,13 +1225,6 @@
     let currentVolume = 80;
     let useLocalAudioFallback = false;
     let localAudioElement = null;
-    // cue logger for diagnostics / ?record
-    window._cueLog = window._cueLog || [];
-    function cue(name) {
-      try { window._cueLog.push({ name, time: Date.now(), page: currentPage }); } catch (e) {}
-      console.log('[cue]', name);
-    }
-    let gestureCapturedForMusic = false;
 
     // Micro-interactions State
     let giftChargeProgress = 0;
@@ -1280,57 +1269,22 @@
       initGiftPressAndHold();
       initClickConfetti();
       checkLocalAudioFallback();
-      registerFirstGestureMusicStart();
     });
-
-    // Pause animations when hidden to save battery
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) {
-        if (sprinkleAnimationId) cancelAnimationFrame(sprinkleAnimationId);
-        if (balloonAnimationId) cancelAnimationFrame(balloonAnimationId);
-      } else {
-        // resume
-        if (sprinkleCanvas) animateSprinkles();
-        if (balloonCanvas && currentPage === 8) animateBalloons();
-      }
-    });
-
-    // visualViewport resize (iOS address bar)
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', () => {
-        resizeSprinkleCanvas();
-        resizeBalloonCanvas();
-      });
-    }
 
     function applyConfigToDOM() {
       const age = getCalculatedAge(CONFIG.dob);
       document.getElementById("calculatedAgeBadge").innerText = `Celebrating ${age} Beautiful Years`;
+      document.getElementById("dobDisplay").innerText = CONFIG.dob.split('.').join(' • ');
 
-      // Date displays
-      const dateLine = CONFIG.dateLine || (CONFIG.dob ? CONFIG.dob.split('.').join(' • ') : '');
-      document.getElementById("dobDisplay").innerText = dateLine;
+      document.getElementById("finalPersonName").innerText = CONFIG.birthdayPersonName || CONFIG.name;
+      document.getElementById("finalSenderName").innerText = CONFIG.yourName;
+      document.getElementById("finalMessageContent").innerText = CONFIG.finalWishMessage;
+      document.getElementById("wishMessageContent").innerText = CONFIG.wishMessage;
 
-      // Headline / final name wiring
-      document.querySelectorAll("#finalPersonName, #landingName, .clay-letter-j").forEach(el => {
-        if (el.id === 'finalPersonName' || el.id === 'landingName') el.innerText = CONFIG.name || CONFIG.wishScript || CONFIG.name;
-        else if (el.classList.contains('clay-letter-j')) el.innerText = (CONFIG.name || 'J').charAt(0);
-      });
-      document.getElementById("finalSenderName").innerText = CONFIG.yourName || CONFIG.yourName;
-      document.getElementById("finalMessageContent").innerText = CONFIG.finalWishMessage || CONFIG.wishMessage;
-      document.getElementById("wishMessageContent").innerText = CONFIG.wishMessage || '';
-
-      // Personalization modal defaults
-      document.getElementById("inputPersonName").value = CONFIG.name;
+      document.getElementById("inputPersonName").value = CONFIG.birthdayPersonName || CONFIG.name;
       document.getElementById("inputDOB").value = CONFIG.dob;
-      document.getElementById("inputYourName").value = CONFIG.yourName || '';
-      document.getElementById("inputCustomMessage").value = CONFIG.typingMessage || '';
-
-      // Star map eyebrow / nightLine
-      const nightBadge = document.querySelector('#page6 .clay-badge');
-      if (nightBadge) nightBadge.querySelector('span').innerText = CONFIG.dateLine || dateLine + ' Starscape';
-      const nightPara = document.querySelector('#page6 p');
-      if (nightPara) nightPara.innerHTML = (CONFIG.nightLine || '').replace(/\n/g, '<br/>');
+      document.getElementById("inputYourName").value = CONFIG.yourName;
+      document.getElementById("inputCustomMessage").value = CONFIG.typingMessage || CONFIG.customMessage;
     }
 
     function renderAppreciationCards() {
@@ -1392,46 +1346,6 @@
         board.appendChild(wrapper);
       });
       lucide.createIcons();
-    }
-
-    // Floating memories that drift in after the film completes
-    function showMemoriesFloating() {
-      const container = document.body;
-      const photos = CONFIG.photos || [];
-      const safeZone = window.innerHeight * 0.66; // lower third
-
-      photos.forEach((photo, i) => {
-        const el = document.createElement('div');
-        el.className = 'polaroid-card-wrapper';
-        el.style.position = 'fixed';
-        el.style.zIndex = 60;
-        el.style.left = (10 + i * 14) + '%';
-        el.style.top = (safeZone + (i * 18)) + 'px';
-        el.style.width = '150px';
-        el.style.height = '190px';
-        el.style.transition = 'transform 1.2s ease, opacity 1s ease';
-        el.style.opacity = '0';
-        el.innerHTML = `
-          <div class="polaroid-card-inner">
-            <div class="polaroid-front">
-              <div class="w-full h-full bg-gray-100 rounded-lg overflow-hidden relative shadow-inner">
-                <img src="${photo.url}" loading="lazy" onerror="this.src='assets/photos/placeholder.png'" class="w-full h-full object-cover">
-              </div>
-              <div class="pt-1.5 text-center">
-                <p class="font-polaroid text-sm font-bold text-purple-950">${photo.caption || ''}</p>
-              </div>
-            </div>
-          </div>
-        `;
-        container.appendChild(el);
-        setTimeout(() => { el.style.opacity = '1'; el.style.transform = `translateY(-40px) rotate(${(-8 + i*3)}deg)`; }, 200 + i*180);
-
-        // tap to flip/zoom
-        el.addEventListener('click', () => {
-          el.style.transform = 'translateY(-10px) scale(1.08)';
-          setTimeout(()=>{ el.style.transform='translateY(-40px) rotate(0deg)'; }, 900);
-        });
-      });
     }
 
     function flipPolaroidCard(cardInner) {
@@ -1514,43 +1428,6 @@
         continueContainer.classList.remove("hidden");
         continueContainer.classList.add("flex");
       }
-      // Night beat: twinkle gold stars, draw small 'J' heart with SVG, show nightLine
-      cue('night');
-      const svg = document.getElementById('constellationSvg');
-      if (svg) {
-        // add gold twinkles
-        for (let i=0;i<8;i++) {
-          const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-          c.setAttribute('cx', 30 + Math.random()*240);
-          c.setAttribute('cy', 20 + Math.random()*140);
-          c.setAttribute('r', 1 + Math.random()*2.5);
-          c.setAttribute('fill', '#ffcf6a');
-          c.setAttribute('opacity', '0');
-          svg.appendChild(c);
-          setTimeout(((el) => () => { el.setAttribute('opacity','1'); setTimeout(()=>el.remove(), 1400); })(c), 200 + i*120);
-        }
-
-        // draw a simple J path using stroke animation
-        const jPath = document.createElementNS('http://www.w3.org/2000/svg','path');
-        jPath.setAttribute('d','M200 40 C200 80,170 100,170 120 C170 140,210 140,210 120');
-        jPath.setAttribute('fill','none');
-        jPath.setAttribute('stroke','#ffcf6a');
-        jPath.setAttribute('stroke-width','2');
-        jPath.setAttribute('stroke-dasharray','300');
-        jPath.setAttribute('stroke-dashoffset','300');
-        svg.appendChild(jPath);
-        setTimeout(()=>{ jPath.style.transition='stroke-dashoffset 900ms ease-out'; jPath.setAttribute('stroke-dashoffset','0'); }, 300);
-        setTimeout(()=>{ cue('postcards'); }, 1200);
-      }
-
-      // fade in the nightLine eyebrow
-      const nightPara = document.querySelector('#page6 p');
-      if (nightPara) {
-        nightPara.style.opacity = 0;
-        nightPara.innerText = CONFIG.nightLine || nightPara.innerText;
-        nightPara.style.transition = 'opacity 700ms ease-out';
-        setTimeout(()=>{ nightPara.style.opacity = 1; }, 600);
-      }
     }
 
     /* STEPPER DOTS */
@@ -1608,10 +1485,6 @@
         } else if (currentPage === 8) {
           triggerConfetti();
           startBalloonsAnimation();
-          // finalize timeline
-          window.bdayDone = true;
-          cue('memories');
-          setTimeout(() => { showMemoriesFloating(); }, 800);
         }
       }, 250);
     }
@@ -1623,9 +1496,8 @@
     }
 
     function startSurpriseAndGoToPage(targetPage) {
-      // Ensure we capture a gesture and attempt to start music when the film launches
-      registerFirstGestureMusicStart();
-      startMusic();
+      lazyLoadYouTubeAPI();
+      startAudioPlayback();
       goToPage(targetPage);
     }
 
@@ -1713,49 +1585,28 @@
     function startTypingMessage() {
       const textContainer = document.getElementById("typedMessageText");
       const continueBtn = document.getElementById("typingContinueBtn");
-      // Robust typewriter that preserves spaces and newlines across replays
-      textContainer.innerHTML = "";
+      textContainer.innerText = "";
       continueBtn.style.opacity = "0";
       continueBtn.style.pointerEvents = "none";
-
-      const fullText = CONFIG.typingMessage || CONFIG.customMessage || "";
+      
+      const fullText = CONFIG.typingMessage || CONFIG.customMessage;
+      let charIndex = 0;
       typingFinished = false;
-      if (typingTimer) { clearInterval(typingTimer); typingTimer = null; }
 
-      // Create span per character so spaces/newlines are preserved reliably
-      const chars = [];
-      for (let i = 0; i < fullText.length; i++) {
-        const ch = fullText.charAt(i);
-        const span = document.createElement('span');
-        if (ch === ' ') span.textContent = '\u00A0';
-        else if (ch === '\n') span.textContent = '\n';
-        else span.textContent = ch;
-        textContainer.appendChild(span);
-        chars.push(span);
-      }
+      if (typingTimer) clearInterval(typingTimer);
 
-      // ensure container preserves newlines
-      textContainer.style.whiteSpace = 'pre-line';
-
-      let idx = 0;
       typingTimer = setInterval(() => {
-        if (idx < chars.length) {
-          chars[idx].style.opacity = '1';
-          if (idx % 3 === 0) playClickSound();
-          idx++;
+        if (charIndex < fullText.length) {
+          textContainer.innerText += fullText.charAt(charIndex);
+          charIndex++;
+          if (charIndex % 3 === 0) playClickSound();
         } else {
           clearInterval(typingTimer);
           typingFinished = true;
-          textContainer.classList.remove('typing-cursor');
-          continueBtn.style.opacity = '1';
-          continueBtn.style.pointerEvents = 'auto';
-
-          // Self-check: rendered text should match original (nbsp -> space)
-          const rendered = Array.from(textContainer.childNodes).map(n => n.textContent).join('').replace(/\u00A0/g, ' ');
-          if (rendered !== fullText) {
-            // fallback: render original string directly
-            textContainer.textContent = fullText;
-          }
+          textContainer.classList.remove("typing-cursor");
+          
+          continueBtn.style.opacity = "1";
+          continueBtn.style.pointerEvents = "auto";
         }
       }, 40);
     }
@@ -1881,26 +1732,6 @@
       firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     }
 
-    // Register a one-time gesture listener to start music on first user interaction
-    function registerFirstGestureMusicStart() {
-      if (!CONFIG.musicAutoplay) return;
-      const once = (e) => {
-        captureFirstGesture(e);
-      };
-      ['pointerdown','touchend','keydown'].forEach(ev => {
-        window.addEventListener(ev, once, { passive: true, capture: true, once: true });
-      });
-    }
-
-    function captureFirstGesture(e) {
-      gestureCapturedForMusic = true;
-      // build audio controller and lazy-load YouTube API only after a gesture
-      lazyLoadYouTubeAPI();
-      // If user had unmuted previously, attempt to start
-      startMusic();
-      cue('music');
-    }
-
     function extractYouTubeId(url) {
       if (!url) return null;
       const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
@@ -1934,10 +1765,6 @@
       isYTReady = true;
       ytPlayer.setVolume(currentVolume);
       updateSongTitleDisplay();
-      // If user already gestured and autoplay is enabled, start playback now
-      if (gestureCapturedForMusic && CONFIG.musicAutoplay && !isMuted) {
-        try { ytPlayer.playVideo(); } catch (e) {}
-      }
     }
 
     function onPlayerStateChange(event) {
@@ -1955,31 +1782,6 @@
 
     function onPlayerError() {
       nextTrack();
-    }
-
-    // Called to actually start music after a gesture or as a guarantee when firing the film
-    function startMusic() {
-      // don't autoplay if user explicitly muted via pill (isMuted true)
-      if (isMuted) return;
-
-      // If a local fallback exists and is ready, prefer that
-      if (useLocalAudioFallback && localAudioElement) {
-        localAudioElement.play().then(() => {
-          isPlaying = true; updatePlayIcons(true);
-        }).catch(()=>{});
-        return;
-      }
-
-      // If youtube API not loaded, load it (will auto-play on onPlayerReady if gestureCapturedForMusic)
-      if (!ytScriptLoaded) lazyLoadYouTubeAPI();
-
-      // If player already ready, attempt to play
-      if (isYTReady && ytPlayer) {
-        try { ytPlayer.playVideo(); isPlaying = true; updatePlayIcons(true); } catch (e) { showAutoplayFallback(); }
-      } else {
-        // show fallback UI while loading
-        showAutoplayFallback();
-      }
     }
 
     function checkLocalAudioFallback() {
@@ -2063,8 +1865,6 @@
 
     function toggleMainAudio() {
       togglePlayPause();
-      // If user explicitly toggles via pill, treat as a mute preference that prevents autoplay
-      isMuted = !isPlaying;
     }
 
     function nextTrack() {
@@ -2155,7 +1955,6 @@
 
     /* FLOATING SPRINKLE CONFETTI CANVAS */
     let sprinkleCanvas, sCtx, sprinkles = [];
-    let sprinkleAnimationId = null;
 
     function setupSprinkleCanvas() {
       sprinkleCanvas = document.getElementById("sprinkleCanvas");
@@ -2182,12 +1981,8 @@
 
     function resizeSprinkleCanvas() {
       if (!sprinkleCanvas) return;
-      const dpr = Math.min(window.devicePixelRatio || 1, DPR_CAP);
-      sprinkleCanvas.width = Math.floor(window.innerWidth * dpr);
-      sprinkleCanvas.height = Math.floor(window.innerHeight * dpr);
-      sprinkleCanvas.style.width = window.innerWidth + 'px';
-      sprinkleCanvas.style.height = window.innerHeight + 'px';
-      sCtx.setTransform(dpr,0,0,dpr,0,0);
+      sprinkleCanvas.width = window.innerWidth;
+      sprinkleCanvas.height = window.innerHeight;
     }
 
     function animateSprinkles() {
@@ -2210,7 +2005,7 @@
         sCtx.fill();
         sCtx.restore();
       });
-      sprinkleAnimationId = requestAnimationFrame(animateSprinkles);
+      requestAnimationFrame(animateSprinkles);
     }
 
     /* GLOSSY 3D BALLOONS CANVAS (CLICK TO POP) */
@@ -2249,12 +2044,8 @@
 
     function resizeBalloonCanvas() {
       if (!balloonCanvas) return;
-      const dpr = Math.min(window.devicePixelRatio || 1, DPR_CAP);
-      balloonCanvas.width = Math.floor(window.innerWidth * dpr);
-      balloonCanvas.height = Math.floor(window.innerHeight * dpr);
-      balloonCanvas.style.width = window.innerWidth + 'px';
-      balloonCanvas.style.height = window.innerHeight + 'px';
-      bCtx.setTransform(dpr,0,0,dpr,0,0);
+      balloonCanvas.width = window.innerWidth;
+      balloonCanvas.height = window.innerHeight;
     }
 
     function startBalloonsAnimation() {
@@ -2278,17 +2069,6 @@
     }
 
     function animateBalloons() {
-      const now = performance.now();
-      if (isMobileDevice) {
-        // target ~30fps when mobile after the film completes
-        animateBalloons._last = animateBalloons._last || 0;
-        if (now - animateBalloons._last < 33) {
-          balloonAnimationId = requestAnimationFrame(animateBalloons);
-          return;
-        }
-        animateBalloons._last = now;
-      }
-
       bCtx.clearRect(0, 0, balloonCanvas.width, balloonCanvas.height);
 
       balloons.forEach(b => {
@@ -2522,7 +2302,7 @@
     }
 
     function savePersonalization() {
-      CONFIG.name = document.getElementById("inputPersonName").value || "Janani";
+      CONFIG.birthdayPersonName = document.getElementById("inputPersonName").value || "Janani";
       CONFIG.dob = document.getElementById("inputDOB").value || "25.08.2007";
       CONFIG.yourName = document.getElementById("inputYourName").value || "Dhanush";
       CONFIG.typingMessage = document.getElementById("inputCustomMessage").value || CONFIG.typingMessage;
